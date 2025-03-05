@@ -132,47 +132,7 @@ El archivo `docker-compose.yml` define los servicios que se ejecutarán en conte
 - **networks**: Define las redes que se utilizarán.
 - **volumes**: Define los volúmenes que se utilizarán.
 
-### Ejemplo de `docker-compose.yml`
 
-```yaml
-version: '3.8'
-services:
-  app:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    ports:
-      - "8080:8080"
-    depends_on:
-      - db
-    environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/spring_hello
-      SPRING_DATASOURCE_USERNAME: root
-      SPRING_DATASOURCE_PASSWORD: example
-    networks:
-      - app-network
-    restart: always
-
-  db:
-    image: mysql:8.0
-    environment:
-      MYSQL_ROOT_PASSWORD: admin
-      MYSQL_DATABASE: tarea2
-    ports:
-      - "3306:3306"
-    volumes:
-      - mysql_data:/var/lib/mysql
-      - ./src/main/resources/schema.sql:/docker-entrypoint-initdb.d/schema.sql
-    networks:
-      - app-network
-    restart: always
-
-networks:
-  app-network:
-    driver: bridge
-
-volumes:
-  mysql_data:
 
 
 
