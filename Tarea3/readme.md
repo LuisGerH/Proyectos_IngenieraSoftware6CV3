@@ -107,5 +107,15 @@ src/
 
 
 ## Capturas de pantalla del sistema
+![image](https://github.com/user-attachments/assets/abb2b3fb-ad04-40c6-ba47-61dc8903e94b)
+
+![image](https://github.com/user-attachments/assets/1e093d7e-2b1c-4cdc-8283-ce53a5ad95dd)
+
+![image](https://github.com/user-attachments/assets/5267f3f7-82b8-4792-b2e4-c4e6ac02090f)
+
+![image](https://github.com/user-attachments/assets/040f3004-f0d3-43c5-bcad-484a7d6886fe)
 
 ## Capturas de pantalla pruebas de CURL
+
+![image](https://github.com/user-attachments/assets/5bc3cfc2-4fa9-4b09-9a47-b224a7ed8aa8)
+
