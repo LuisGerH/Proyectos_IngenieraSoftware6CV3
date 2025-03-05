@@ -99,3 +99,13 @@ mvn test
 - Manejo de errores personalizado
 
 ## Capturas de pantalla
+![image](https://github.com/user-attachments/assets/98bdda15-5df9-48df-8924-37467bd1ba0d)
+
+![image](https://github.com/user-attachments/assets/5538775d-2f63-4f8f-bb6f-95cf8962e92d)
+
+![image](https://github.com/user-attachments/assets/b737f409-01ab-4fea-a78e-2bdee01cb5c0)
+
+![image](https://github.com/user-attachments/assets/204bc55e-231d-41d4-b706-67a69a174160)
+
+![image](https://github.com/user-attachments/assets/fb820616-d515-4cde-ad51-96d9a42dd378)
+
