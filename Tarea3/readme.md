@@ -105,6 +105,76 @@ src/
 - Control de acceso por roles
 - Validación de datos de entrada
 
+- # Investigación: Explicación de los Archivos
+
+## docker-compose.yml
+
+El archivo `docker-compose.yml` define los servicios que se ejecutarán en contenedores Docker. En este caso, define dos servicios: la aplicación Spring Boot y la base de datos MySQL.
+
+- **version**: Define la versión de Docker Compose que se está utilizando.
+- **services**: Define los servicios que se ejecutarán.
+  - **app**: Servicio de la aplicación Spring Boot.
+    - **build**: Define cómo construir la imagen de Docker para este servicio.
+      - **context**: El directorio de contexto para la construcción de la imagen.
+      - **dockerfile**: El archivo Dockerfile que se utilizará para construir la imagen.
+    - **ports**: Define los puertos que se expondrán.
+    - **depends_on**: Define las dependencias de este servicio. En este caso, depende del servicio `db`.
+    - **environment**: Define las variables de entorno para el servicio.
+    - **networks**: Define las redes a las que pertenece el servicio.
+    - **restart**: Define la política de reinicio del contenedor.
+  - **db**: Servicio de la base de datos MySQL.
+    - **image**: La imagen de Docker que se utilizará para este servicio.
+    - **ports**: Define los puertos que se expondrán.
+    - **environment**: Define las variables de entorno para el servicio.
+    - **volumes**: Define los volúmenes que se montarán en el contenedor.
+    - **networks**: Define las redes a las que pertenece el servicio.
+    - **restart**: Define la política de reinicio del contenedor.
+- **networks**: Define las redes que se utilizarán.
+- **volumes**: Define los volúmenes que se utilizarán.
+
+### Ejemplo de `docker-compose.yml`
+
+```yaml
+version: '3.8'
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/spring_hello
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: example
+    networks:
+      - app-network
+    restart: always
+
+  db:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: admin
+      MYSQL_DATABASE: tarea2
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./src/main/resources/schema.sql:/docker-entrypoint-initdb.d/schema.sql
+    networks:
+      - app-network
+    restart: always
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  mysql_data:
+
+
 
 ## Capturas de pantalla del sistema
 ![image](https://github.com/user-attachments/assets/abb2b3fb-ad04-40c6-ba47-61dc8903e94b)
