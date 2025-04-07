@@ -1,13 +1,15 @@
-# Sistema de Gestión de Usuarios con Spring Boot
+# Sistema de Busqueda y Recomendación de libros
 
 ## Descripción General
-Este es un proyecto Spring Boot que implementa un sistema de gestión de usuarios con autenticación, roles y permisos, dockerizado para un despliegue sencillo.
+Este es un proyecto Spring Boot que implementa un sistema de  Busqueda y Recomendación de libros con gestión de usuarios y autenticación, roles y permisos, dockerizado para un despliegue sencillo.
 
 ## Características Principales
 - Autenticación de usuarios
 - Sistema de roles (ADMIN y USER)
 - Gestión de perfiles de usuario
 - Registro de nuevos usuarios
+- Busqueda de libros
+- Tema a elegir
 - Dockerización completa
 
 ## Requisitos Previos
