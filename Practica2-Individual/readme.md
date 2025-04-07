@@ -91,4 +91,10 @@ src/
 
 
 ## Capturas de pantalla del sistema
+![image](https://github.com/user-attachments/assets/2f38cf5e-df30-44ce-83e3-fd2b9d71a696)
+
+![image](https://github.com/user-attachments/assets/ad227537-7b09-409c-be21-4aac196d10fc)
+
+![image](https://github.com/user-attachments/assets/2f423c48-bd6f-4c8d-bc81-cd957653e025)
+
 
