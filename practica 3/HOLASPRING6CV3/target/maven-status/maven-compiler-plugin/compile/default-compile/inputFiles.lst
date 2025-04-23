@@ -9,6 +9,7 @@ E:\escom\Software\gitclone\Proyectos_IngenieraSoftware6CV3\Practica2-Individual\
 E:\escom\Software\gitclone\Proyectos_IngenieraSoftware6CV3\Practica2-Individual\HOLASPRING6CV3\src\main\java\com\holamundo\HOLASPRING6CV3\controllers\LoginController.java
 E:\escom\Software\gitclone\Proyectos_IngenieraSoftware6CV3\Practica2-Individual\HOLASPRING6CV3\src\main\java\com\holamundo\HOLASPRING6CV3\controllers\MySQLController.java
 E:\escom\Software\gitclone\Proyectos_IngenieraSoftware6CV3\Practica2-Individual\HOLASPRING6CV3\src\main\java\com\holamundo\HOLASPRING6CV3\controllers\PerfilController.java
+E:\escom\Software\gitclone\Proyectos_IngenieraSoftware6CV3\Practica2-Individual\HOLASPRING6CV3\src\main\java\com\holamundo\HOLASPRING6CV3\controllers\RecomendacionesController.java
 E:\escom\Software\gitclone\Proyectos_IngenieraSoftware6CV3\Practica2-Individual\HOLASPRING6CV3\src\main\java\com\holamundo\HOLASPRING6CV3\controllers\RegistroController.java
 E:\escom\Software\gitclone\Proyectos_IngenieraSoftware6CV3\Practica2-Individual\HOLASPRING6CV3\src\main\java\com\holamundo\HOLASPRING6CV3\controllers\ThemeController.java
 E:\escom\Software\gitclone\Proyectos_IngenieraSoftware6CV3\Practica2-Individual\HOLASPRING6CV3\src\main\java\com\holamundo\HOLASPRING6CV3\Holaspring6Cv3Application.java
@@ -21,4 +22,5 @@ E:\escom\Software\gitclone\Proyectos_IngenieraSoftware6CV3\Practica2-Individual\
 E:\escom\Software\gitclone\Proyectos_IngenieraSoftware6CV3\Practica2-Individual\HOLASPRING6CV3\src\main\java\com\holamundo\HOLASPRING6CV3\services\CustomUserDetails.java
 E:\escom\Software\gitclone\Proyectos_IngenieraSoftware6CV3\Practica2-Individual\HOLASPRING6CV3\src\main\java\com\holamundo\HOLASPRING6CV3\services\CustomUserDetailsService.java
 E:\escom\Software\gitclone\Proyectos_IngenieraSoftware6CV3\Practica2-Individual\HOLASPRING6CV3\src\main\java\com\holamundo\HOLASPRING6CV3\services\LibroFavoritoService.java
+E:\escom\Software\gitclone\Proyectos_IngenieraSoftware6CV3\Practica2-Individual\HOLASPRING6CV3\src\main\java\com\holamundo\HOLASPRING6CV3\services\RecomendacionesService.java
 E:\escom\Software\gitclone\Proyectos_IngenieraSoftware6CV3\Practica2-Individual\HOLASPRING6CV3\src\main\java\com\holamundo\HOLASPRING6CV3\services\UsuarioService.java

@@ -320,6 +320,22 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
+                    <!-- Selector de tema -->
+                    <li class="nav-item">
+                        <div class="theme-selector">
+                            <div class="theme-options">
+                                <div class="theme-option" data-theme="light" title="Tema claro">
+                                    <i class="fas fa-sun"></i>
+                                </div>
+                                <div class="theme-option" data-theme="dark" title="Tema oscuro">
+                                    <i class="fas fa-moon"></i>
+                                </div>
+                                <div class="theme-option" data-theme="system" title="Tema del sistema">
+                                    <i class="fas fa-desktop"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/home"><i class="fas fa-search me-1"></i> Buscar Libros</a>
                     </li>
@@ -328,6 +344,9 @@
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/perfil"><i class="fas fa-user me-1"></i> Perfil</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/user/recomendaciones" ><i class="fas fa-book-reader"></i>Recomendaciones</a>
                     </li>
                     <li class="nav-item" th:if="${isAdmin}">
                         <a class="nav-link" href="/admin/gestion-usuarios"><i class="fas fa-cogs me-1"></i> Gestión</a>

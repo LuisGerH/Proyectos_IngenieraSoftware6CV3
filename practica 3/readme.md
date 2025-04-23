@@ -29,15 +29,6 @@ Este es un proyecto Spring Boot que implementa un sistema de  Busqueda y Recomen
 
 - **Error en la búsqueda:** Si ocurre un error durante la búsqueda (por ejemplo, problemas con la conexión a la API), se mostrará un mensaje de error indicando al usuario que intente de nuevo.
 
-## Funcionalidades de Favoritos
-
-- **Añadir a favorito desde la búsqueda de libros:** Los usuarios pueden guardar libros directamente desde los resultados de búsqueda con un solo clic en el ícono de corazón.
-
-- **Ver todos los favoritos:** Sección dedicada donde los usuarios pueden visualizar todos los libros que han guardado como favoritos, organizados en tarjetas con imagen, título y autor.
-
-- **Eliminar favoritos:** Los usuarios pueden eliminar libros de su colección de favoritos. Al hacerlo, se aplica una animación suave que reduce la tarjeta antes de eliminarla, mejorando la experiencia visual.
-
-- **Enlaces a detalles:** Cada libro tiene un botón o enlace que lleva directamente a su página en Open Library, donde se puede consultar más información.
 
 ## Instalación y Ejecución
 

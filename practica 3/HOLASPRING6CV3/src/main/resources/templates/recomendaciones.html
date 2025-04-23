@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mis Libros Favoritos - LibroSearch</title>
+    <title>Recomendaciones - LibroSearch</title>
     <!-- Tema CSS -->
     <link href="/css/themes.css" rel="stylesheet">
     <!-- CSRF Token para solicitudes fetch -->
@@ -18,6 +18,18 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <style>
+        .book-description {
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+    margin-bottom: 15px;
+    max-height: 80px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+}
+
         /* Variables para temas */
         :root {
             /* Variables para tema claro (default) */
@@ -80,7 +92,7 @@
         
         /* Hero Section */
         .hero {
-            background: linear-gradient(135deg, var(--accent), #8e44ad);
+            background: linear-gradient(135deg, #9b59b6, #1abc9c);
             padding: 60px 0;
             color: #fff;
             border-radius: 0 0 30% 30% / 30px;
@@ -101,8 +113,8 @@
             margin: 0 auto;
         }
 
-        /* Book Cards */
-        .favorites-section {
+        /* Recomendaciones Section */
+        .recommendations-section {
             padding: 20px 0 80px;
         }
         
@@ -175,13 +187,7 @@
             margin-bottom: 10px;
         }
 
-        .book-date {
-            color: var(--text-secondary);
-            font-size: 0.8rem;
-            margin-bottom: 10px;
-        }
-        
-        .btn-remove {
+        .btn-favorite {
             color: var(--accent);
             background: none;
             border: 1px solid var(--accent);
@@ -191,10 +197,15 @@
             transition: all 0.3s ease;
         }
         
-        .btn-remove:hover {
+        .btn-favorite:hover {
             background: var(--accent);
             color: #fff;
             transform: translateY(-2px);
+        }
+        
+        .btn-favorite.active {
+            background: var(--accent);
+            color: #fff;
         }
         
         .view-btn {
@@ -205,12 +216,14 @@
             font-weight: 500;
             transition: all 0.3s ease;
             border: none;
+            text-decoration: none;
         }
         
         .view-btn:hover {
             background: #2980b9;
             transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(41, 128, 185, 0.3);
+            color: #fff;
         }
 
         /* Empty State */
@@ -302,7 +315,7 @@
                 flex-direction: column;
             }
             
-            .book-actions button {
+            .book-actions button, .book-actions a {
                 margin-bottom: 10px;
                 width: 100%;
             }
@@ -340,13 +353,13 @@
                         <a class="nav-link" href="/home"><i class="fas fa-search me-1"></i> Buscar Libros</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link active" href="/user/mis-favoritos"><i class="fas fa-heart me-1"></i> Mis Favoritos</a>
+                        <a class="nav-link" href="/user/mis-favoritos"><i class="fas fa-heart me-1"></i> Mis Favoritos</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/perfil"><i class="fas fa-user me-1"></i> Perfil</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/user/recomendaciones" ><i class="fas fa-book-reader"></i>Recomendaciones</a>
+                        <a class="nav-link active" href="/user/recomendaciones" ><i class="fas fa-book-reader me-1"></i> Recomendaciones</a>
                     </li>
                     <li class="nav-item" th:if="${isAdmin}">
                         <a class="nav-link" href="/admin/gestion-usuarios"><i class="fas fa-cogs me-1"></i> Gestión</a>
@@ -367,31 +380,31 @@
     <!-- Hero Section -->
     <section class="hero">
         <div class="container text-center">
-            <h1>Mis Libros Favoritos</h1>
-            <p>Tu colección personal de libros guardados para leer más tarde</p>
+            <h1>Recomendaciones personalizadas</h1>
+            <p>Descubre nuevos títulos basados en tus libros favoritos y preferencias de lectura</p>
         </div>
     </section>
 
-    <!-- Favorites Section -->
-    <section class="favorites-section">
+    <!-- Recommendations Section -->
+    <section class="recommendations-section">
         <div class="container">
-            <div id="favoritesHeader">
-                <h2 class="section-title">Mi Biblioteca Personal</h2>
-                <p id="favoritesCount" class="mb-4" th:text="${cantidadFavoritos} + ' libros guardados en tu colección'">0 libros guardados en tu colección</p>
+            <div id="recommendationsHeader">
+                <h2 class="section-title">Libros recomendados para ti</h2>
+                <p id="recommendationsCount" class="mb-4" th:text="${cantidadRecomendaciones} + ' libros sugeridos según tus gustos'">0 libros sugeridos según tus gustos</p>
             </div>
             
-            <!-- Empty State - Si no hay favoritos -->
-            <div class="empty-state" th:if="${favoritos.isEmpty()}">
-                <i class="far fa-heart"></i>
-                <h3>No tienes libros favoritos guardados</h3>
-                <p>Explora el catálogo y agrega libros a tus favoritos para verlos aquí</p>
+            <!-- Empty State - Si no hay recomendaciones -->
+            <div class="empty-state" th:if="${cantidadRecomendaciones == 0}">
+                <i class="fas fa-book-reader"></i>
+                <h3>Aún no tenemos recomendaciones para ti</h3>
+                <p>Agrega algunos libros a tus favoritos para que podamos sugerirte títulos similares</p>
                 <a href="/home" class="btn view-btn mt-3"><i class="fas fa-search me-2"></i>Buscar Libros</a>
             </div>
             
             <!-- Book Cards Container -->
-            <div class="row" id="favoriteBooks" th:if="${!favoritos.isEmpty()}">
-                <!-- Tarjeta para cada libro favorito -->
-                <div class="col-md-4 col-sm-6 mb-4" th:each="libro : ${favoritos}">
+            <div class="row" id="recommendedBooks" th:if="${cantidadRecomendaciones > 0}">
+                <!-- Tarjeta para cada libro recomendado -->
+                <div class="col-md-4 col-sm-6 mb-4" th:each="libro : ${recomendaciones}">
                     <div class="book-card">
                         <div class="book-img-container">
                             <img th:src="${libro.imagenUrl != null ? libro.imagenUrl : '/api/placeholder/400/250'}" 
@@ -400,14 +413,17 @@
                         </div>
                         <div class="book-info">
                             <h3 class="book-title" th:text="${libro.titulo}">Título del libro</h3>
-                            <p class="book-author"><i class="fas fa-pen-fancy me-2"></i><span th:text="${libro.autor != null ? libro.autor : 'Autor desconocido'}">Autor del libro</span></p>
-                            <p class="book-date"><i class="far fa-calendar-alt me-2"></i>Guardado el <span th:text="${#temporals.format(libro.fechaGuardado, 'dd/MM/yyyy')}">01/01/2025</span></p>
-                            <div class="d-flex justify-content-between align-items-center book-actions">
-                                <a th:href="'https://openlibrary.org/works/' + ${libro.libroId}" target="_blank" class="btn view-btn">
+    <p class="book-author"><i class="fas fa-pen-fancy me-2"></i><span th:text="${libro.autor != null ? libro.autor : 'Autor desconocido'}">Autor del libro</span></p>
+    <div class="d-flex justify-content-between align-items-center book-actions">
+                                <a th:href="'https://openlibrary.org/works/' + ${libro.id}" target="_blank" class="btn view-btn">
                                     <i class="fas fa-eye me-2"></i>Ver detalles
                                 </a>
-                                <button class="btn btn-remove" th:data-book-id="${libro.libroId}">
-                                    <i class="fas fa-trash-alt me-2"></i>Eliminar
+                                <button class="btn btn-favorite" 
+                                        th:data-libro-id="${libro.id}" 
+                                        th:data-titulo="${libro.titulo}" 
+                                        th:data-autor="${libro.autor}" 
+                                        th:data-imagen-url="${libro.imagenUrl}">
+                                    <i class="far fa-heart me-2"></i>Guardar
                                 </button>
                             </div>
                         </div>
@@ -477,89 +493,73 @@
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
-    <!-- Script para manejo de favoritos -->
+    <!-- Script para manejo de recomendaciones -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // CSRF token para peticiones AJAX
             const token = document.querySelector('meta[name="_csrf"]').getAttribute('content');
             const header = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
             
-            // Agregar event listeners a todos los botones de eliminar
-            document.querySelectorAll('.btn-remove').forEach(btn => {
+            // Agregar event listeners a todos los botones de favoritos
+            document.querySelectorAll('.btn-favorite').forEach(btn => {
                 btn.addEventListener('click', function() {
-                    const bookId = this.getAttribute('data-book-id');
-                    eliminarFavorito(bookId, this);
+                    const libroId = this.getAttribute('data-libro-id');
+                    const titulo = this.getAttribute('data-titulo');
+                    const autor = this.getAttribute('data-autor');
+                    const imagenUrl = this.getAttribute('data-imagen-url');
+                    
+                    agregarAFavoritos(libroId, titulo, autor, imagenUrl, this);
                 });
             });
             
-            // Función para eliminar favorito
-            function eliminarFavorito(bookId, btnElement) {
-    Swal.fire({
-        title: '¿Eliminar libro?',
-        text: '¿Estás seguro de que deseas eliminar este libro de tus favoritos?',
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#d33',
-        cancelButtonColor: '#3085d6',
-        confirmButtonText: 'Sí, eliminar',
-        cancelButtonText: 'Cancelar'
-    }).then((result) => {
-        if (result.isConfirmed) {
-            fetch(`/api/favoritos/${bookId}`, {
-                method: 'DELETE',
-                headers: {
-                    [header]: token
-                }
-            })
-            .then(response => {
-                if (!response.ok) throw new Error('Error al eliminar favorito');
-                return response.json();
-            })
-            .then(data => {
-                if (data.success) {
-                    const card = btnElement.closest('.col-md-4');
-                    card.style.transition = 'all 0.5s ease';
-                    card.style.opacity = '0';
-                    card.style.transform = 'scale(0.8)';
-
-                    setTimeout(() => {
-                        card.remove();
-
-                        const favoritesCount = document.getElementById('favoritesCount');
-                        const currentCount = parseInt(favoritesCount.textContent.split(' ')[0]);
-                        const newCount = currentCount - 1;
-                        favoritesCount.textContent = `${newCount} libros guardados en tu colección`;
-
-                        if (newCount === 0) {
-                            const emptyState = document.createElement('div');
-                            emptyState.className = 'empty-state';
-                            emptyState.innerHTML = `
-                                <i class="far fa-heart"></i>
-                                <h3>No tienes libros favoritos guardados</h3>
-                                <p>Explora el catálogo y agrega libros a tus favoritos para verlos aquí</p>
-                                <a href="/home" class="btn view-btn mt-3"><i class="fas fa-search me-2"></i>Buscar Libros</a>
-                            `;
-                            document.getElementById('favoriteBooks').replaceWith(emptyState);
-                        }
-
+            // Función para agregar a favoritos
+            function agregarAFavoritos(libroId, titulo, autor, imagenUrl, btnElement) {
+                fetch('/api/favoritos', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        [header]: token
+                    },
+                    body: JSON.stringify({
+                        libroId: libroId,
+                        titulo: titulo,
+                        autor: autor,
+                        imagenUrl: imagenUrl
+                    })
+                })
+                .then(response => {
+                    if (!response.ok) throw new Error('Error al agregar favorito');
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.success) {
+                        btnElement.classList.add('active');
+                        btnElement.innerHTML = '<i class="fas fa-heart me-2"></i>Guardado';
+                        
                         Swal.fire({
-                            title: 'Eliminado',
-                            text: 'El libro se ha eliminado de tus favoritos.',
+                            title: '¡Agregado!',
+                            text: 'El libro se ha añadido a tus favoritos',
                             icon: 'success',
                             timer: 1500,
                             showConfirmButton: false
                         });
-                    }, 500);
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                Swal.fire('Error', 'Ha ocurrido un error al eliminar el libro de favoritos', 'error');
-            });
-        }
-    });
-}
-
+                    } else {
+                        Swal.fire({
+                            title: 'Aviso',
+                            text: 'Este libro ya está en tus favoritos',
+                            icon: 'info'
+                        });
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    Swal.fire({
+                        title: 'Error',
+                        text: 'Ha ocurrido un error al agregar el libro a favoritos',
+                        icon: 'error'
+                    });
+                });
+            }
         });
     </script>
     

@@ -20,6 +20,7 @@ public class SecurityConfig {
                 .requestMatchers("/registro", "/login", "/testConnection", "/css/**", "/js/**", "/images/**").permitAll() // Permitir acceso a login y registro
                 .requestMatchers("/cambiar-tema").authenticated() // Añadimos esta línea
                 .requestMatchers("/api/favoritos/**").authenticated()
+                .requestMatchers("/api/recomendaciones").authenticated()
                 .requestMatchers("/admin/**").hasRole("ADMIN")
                 .requestMatchers("/user/**").hasRole("USER")
                 .anyRequest().authenticated()
