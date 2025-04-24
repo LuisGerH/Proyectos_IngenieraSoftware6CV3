@@ -22,7 +22,7 @@ public class SecurityConfig {
                 .requestMatchers("/api/favoritos/**").authenticated()
                 .requestMatchers("/api/recomendaciones").authenticated()
                 .requestMatchers("/admin/**").hasRole("ADMIN")
-                .requestMatchers("/user/**").hasRole("USER")
+                .requestMatchers("/user/**").hasAnyRole("USER","ADMIN")
                 .anyRequest().authenticated()
             )
             .formLogin(form -> form

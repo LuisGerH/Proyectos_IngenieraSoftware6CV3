@@ -39,19 +39,25 @@ public class PerfilController {
 public String actualizarPerfil(
         @AuthenticationPrincipal UserDetails userDetails,
         @RequestParam("nombre") String nombre,
-        @RequestParam("email") String email) {
+        @RequestParam("email") String email,
+        Model model) {
 
     boolean cambiado = usuarioService.actualizarPerfil(userDetails.getUsername(), nombre, email);
 
     if (cambiado) {
-        // Si el nombre de usuario cambió, cerramos la sesión y forzamos un nuevo inicio
+        // Si el nombre de usuario cambió, necesitamos una forma especial de manejar el logout
         if (!nombre.equals(userDetails.getUsername())) {
-            return "redirect:/logout";
+            // No redirigir directamente a /logout, sino a una página intermedia
+            return "redirect:/perfil/logout";
         }
         return "redirect:/perfil?success";
     } else {
         return "redirect:/perfil?error";
     }
 }
-
+@GetMapping("/perfil/logout")
+public String handleLogout(Model model) {
+    // Esta página intermedia contiene el formulario de logout y lo envía automáticamente
+    return "logout-redirect";
+}
 }

@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Redirigiendo...</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+    <p>Cerrando sesión y redirigiendo...</p>
+    
+    <form id="logoutForm" th:action="@{/logout}" method="post">
+        <!-- CSRF token is automatically included by Thymeleaf -->
+    </form>
+    
+    <script>
+        // Submit the form automatically when the page loads
+        window.onload = function() {
+            document.getElementById('logoutForm').submit();
+        }
+    </script>
+</body>
+</html>
