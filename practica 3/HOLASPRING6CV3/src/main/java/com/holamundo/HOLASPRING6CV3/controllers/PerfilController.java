@@ -36,28 +36,60 @@ public class PerfilController {
     }
 
     @PostMapping("/perfil/actualizar")
-public String actualizarPerfil(
-        @AuthenticationPrincipal UserDetails userDetails,
-        @RequestParam("nombre") String nombre,
-        @RequestParam("email") String email,
-        Model model) {
-
-    boolean cambiado = usuarioService.actualizarPerfil(userDetails.getUsername(), nombre, email);
-
-    if (cambiado) {
-        // Si el nombre de usuario cambió, necesitamos una forma especial de manejar el logout
-        if (!nombre.equals(userDetails.getUsername())) {
-            // No redirigir directamente a /logout, sino a una página intermedia
-            return "redirect:/perfil/logout";
+    public String actualizarPerfil(
+            @AuthenticationPrincipal UserDetails userDetails,
+            @RequestParam("nombre") String nombre,
+            @RequestParam("email") String email,
+            Model model) {
+    
+        UsuarioService.ProfileUpdateResult resultado = usuarioService.actualizarPerfil(userDetails.getUsername(), nombre, email);
+    
+        switch (resultado) {
+            case SUCCESS:
+                // Si el nombre de usuario cambió, necesitamos una forma especial de manejar el logout
+                if (!nombre.equals(userDetails.getUsername())) {
+                    // No redirigir directamente a /logout, sino a una página intermedia
+                    return "redirect:/perfil/logout";
+                }
+                return "redirect:/perfil?success";
+            case EMAIL_IN_USE:
+                return "redirect:/perfil?emailError";
+            case USERNAME_IN_USE:
+                return "redirect:/perfil?usernameError";
+            default:
+                return "redirect:/perfil?error";
         }
-        return "redirect:/perfil?success";
-    } else {
-        return "redirect:/perfil?error";
     }
-}
+
 @GetMapping("/perfil/logout")
 public String handleLogout(Model model) {
     // Esta página intermedia contiene el formulario de logout y lo envía automáticamente
     return "logout-redirect";
+}
+
+@PostMapping("/perfil/cambiar-password")
+public String cambiarPassword(
+        @AuthenticationPrincipal UserDetails userDetails,
+        @RequestParam("currentPassword") String currentPassword,
+        @RequestParam("newPassword") String newPassword,
+        @RequestParam("confirmPassword") String confirmPassword,
+        Model model) {
+    
+    UsuarioService.PasswordChangeResult resultado = 
+            usuarioService.cambiarPassword(userDetails.getUsername(), 
+                                        currentPassword, 
+                                        newPassword, 
+                                        confirmPassword);
+    
+    switch (resultado) {
+        case SUCCESS:
+            return "redirect:/perfil?passwordSuccess";
+        case CURRENT_PASSWORD_INCORRECT:
+            return "redirect:/perfil?passwordError=current";
+        case PASSWORDS_DONT_MATCH:
+            return "redirect:/perfil?passwordError=match";
+        default:
+            return "redirect:/perfil?passwordError=unknown";
+    }
 }
 }

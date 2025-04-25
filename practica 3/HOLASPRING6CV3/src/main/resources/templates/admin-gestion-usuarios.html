@@ -72,9 +72,9 @@ body.theme-dark table tr:hover {
     <div class="container mt-5">
         <h2 class="text-center">Gestión de Usuarios</h2>
 
+        <!-- Mensajes de éxito y error generales -->
         <div th:if="${param.success}" class="alert alert-success">Usuario actualizado correctamente.</div>
-        <div th:if="${param.error}" class="alert alert-danger">Error al actualizar usuario.</div>
-
+        
         <table class="table table-striped">
             <thead>
                 <tr>
@@ -93,6 +93,14 @@ body.theme-dark table tr:hover {
                     <td><span th:each="rol : ${usuario.roles}" th:text="${rol.name}"></span></td>
 
                     <td>
+                        <!-- Mensajes de error específicos para cada usuario -->
+                        <div th:if="${param.error != null && param.id != null && param.id[0] == usuario.id.toString()}" class="alert alert-danger">
+                            <div th:if="${param.error[0] == 'emailInUse'}">Error: El email ya está en uso por otro usuario.</div>
+                            <div th:if="${param.error[0] == 'usernameInUse'}">Error: El nombre de usuario ya está en uso.</div>
+                            <div th:if="${param.error[0] == 'userNotFound'}">Error: Usuario no encontrado.</div>
+                            <div th:if="${param.error[0] == 'unknown'}">Error al actualizar usuario.</div>
+                        </div>
+                        
                         <!-- Formulario para Editar el Usuario -->
                         <form th:action="@{/admin/actualizar-usuario}" method="post">
                             <input type="hidden" name="id" th:value="${usuario.id}">

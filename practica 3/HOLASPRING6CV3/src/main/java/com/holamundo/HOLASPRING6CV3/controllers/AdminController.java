@@ -2,6 +2,7 @@ package com.holamundo.HOLASPRING6CV3.controllers;
 
 import com.holamundo.HOLASPRING6CV3.models.UserModel;
 import com.holamundo.HOLASPRING6CV3.services.UsuarioService;
+import com.holamundo.HOLASPRING6CV3.services.UsuarioService.AdminUpdateResult;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -9,7 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.security.core.userdetails.User;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.holamundo.HOLASPRING6CV3.services.CustomUserDetails;
 
 import java.util.List;
@@ -57,11 +58,33 @@ public class AdminController {
     public String actualizarUsuario(@RequestParam("id") Long id,
                                     @RequestParam("username") String username,
                                     @RequestParam("email") String email,
-                                    @RequestParam("rol") String rol) {
+                                    @RequestParam("rol") String rol,
+                                    RedirectAttributes redirectAttributes) {
 
-        // Actualizar el usuario en el servicio
-        boolean actualizado = usuarioService.actualizarUsuarioAdmin(id, username, email, rol);
+        // Actualizar el usuario en el servicio y manejar los distintos resultados
+        AdminUpdateResult resultado = usuarioService.actualizarUsuarioAdmin(id, username, email, rol);
+        
         // Redirigir según el resultado
-        return actualizado ? "redirect:/admin/gestion-usuarios?success" : "redirect:/admin/gestion-usuarios?error";
+        switch (resultado) {
+            case SUCCESS:
+                return "redirect:/admin/gestion-usuarios?success";
+            case EMAIL_IN_USE:
+                // Agregar el ID del usuario para mostrar el error en su formulario específico
+                redirectAttributes.addAttribute("id", id);
+                redirectAttributes.addAttribute("error", "emailInUse");
+                return "redirect:/admin/gestion-usuarios";
+            case USERNAME_IN_USE:
+                redirectAttributes.addAttribute("id", id);
+                redirectAttributes.addAttribute("error", "usernameInUse");
+                return "redirect:/admin/gestion-usuarios";
+            case USER_NOT_FOUND:
+                redirectAttributes.addAttribute("id", id);
+                redirectAttributes.addAttribute("error", "userNotFound");
+                return "redirect:/admin/gestion-usuarios";
+            default:
+                redirectAttributes.addAttribute("id", id);
+                redirectAttributes.addAttribute("error", "unknown");
+                return "redirect:/admin/gestion-usuarios";
+        }
     }
 }

@@ -41,7 +41,7 @@ public class RecomendacionesService {
         for (String autor : autores) {
             try {
                 // Límite de 3 libros por autor para evitar demasiadas recomendaciones
-                String url = API_BASE_URL + "?author=" + autor.replace(" ", "+") + "&limit=3";
+                String url = API_BASE_URL + "?author=" + autor.replace(" ", "+") + "&limit=4";
                 Map<String, Object> response = restTemplate.getForObject(url, Map.class);
                 
                 if (response != null && response.containsKey("docs")) {

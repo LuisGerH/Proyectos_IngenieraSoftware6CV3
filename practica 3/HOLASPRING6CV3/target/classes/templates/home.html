@@ -19,6 +19,58 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
 
     <style>
+        /* Estilos para la paginación */
+        .pagination {
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+        }
+        
+        .pagination .page-item {
+            margin: 0 3px;
+        }
+        
+        .pagination .page-link {
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            color: var(--primary);
+            background-color: var(--card-background);
+            border-color: var(--light);
+        }
+        
+        .pagination .page-item.active .page-link {
+            background-color: var(--secondary);
+            border-color: var(--secondary);
+            color: #fff;
+            transform: scale(1.1);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        
+        .pagination .page-link:hover:not(.active) {
+            background-color: var(--light);
+            transform: translateY(-2px);
+        }
+        
+        .pagination .page-item.disabled .page-link {
+            color: var(--text-secondary);
+            background-color: var(--card-background);
+            cursor: not-allowed;
+        }
+        
+        #pageInfo {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            display: block;
+            margin-top: -0.5rem;
+        }
+    </style>
+
+    <style>
         /* Añadir al estilo existente */
 .btn-favorite {
     background: none;
@@ -569,6 +621,25 @@ body {
         </div>
     </section>
 
+
+<!-- Añadir esto después de la sección de resultados pero antes del pie de página -->
+<div class="container" id="paginationContainer" style="display: none;">
+    <div class="row justify-content-center">
+        <div class="col-md-12">
+            <nav aria-label="Navegación por páginas">
+                <ul class="pagination justify-content-center" id="pagination">
+                    <!-- Los botones de paginación se generarán aquí mediante JavaScript -->
+                </ul>
+            </nav>
+        </div>
+    </div>
+    <div class="row justify-content-center mb-5">
+        <div class="col-md-6 text-center">
+            <span id="pageInfo">Página 1 de 10</span>
+        </div>
+    </div>
+</div>
+
     <!-- Footer -->
     <footer>
         <div class="container">
@@ -641,6 +712,16 @@ body {
             const resultsHeader = document.getElementById('resultsHeader');
             const resultsCount = document.getElementById('resultsCount');
             const errorMessage = document.getElementById('errorMessage');
+            const paginationContainer = document.getElementById('paginationContainer');
+            const pagination = document.getElementById('pagination');
+            const pageInfo = document.getElementById('pageInfo');
+            
+            // Variables para la paginación
+            let currentPage = 1;
+            let totalResults = 0;
+            let resultsPerPage = 12;
+            let totalPages = 0;
+            let lastSearchQuery = '';
             
             // Ocultar los resultados al iniciar
             resultsHeader.style.display = 'none';
@@ -656,15 +737,24 @@ body {
                     emptyState.style.display = 'none';
                     bookResults.innerHTML = '';
                     errorMessage.style.display = 'none';
+                    paginationContainer.style.display = 'none';
+                    
+                    // Resetear la paginación
+                    currentPage = 1;
+                    lastSearchQuery = query;
                     
                     // Realizar la búsqueda en Open Library API
-                    searchBooks(query);
+                    searchBooks(query, currentPage);
                 }
             });
             
             // Función para buscar libros
-            function searchBooks(query) {
-                const url = `https://openlibrary.org/search.json?q=${encodeURIComponent(query)}&limit=12`;
+            function searchBooks(query, page) {
+                // Calcular el offset para la paginación (0-based)
+                const offset = (page - 1) * resultsPerPage;
+                
+                // Nota: la API de Open Library admite offset para paginación
+                const url = `https://openlibrary.org/search.json?q=${encodeURIComponent(query)}&limit=${resultsPerPage}&offset=${offset}`;
                 
                 fetch(url)
                     .then(response => {
@@ -677,11 +767,24 @@ body {
                         // Ocultar spinner
                         loadingSpinner.style.display = 'none';
                         
+                        // Guardar el total de resultados para la paginación
+                        totalResults = data.numFound;
+                        totalPages = Math.ceil(totalResults / resultsPerPage);
+                        
                         // Mostrar resultados
                         if (data.docs && data.docs.length > 0) {
                             displayBooks(data.docs);
                             resultsHeader.style.display = 'block';
-                            resultsCount.textContent = `Mostrando ${data.docs.length} de ${data.numFound} resultados encontrados`;
+                            resultsCount.textContent = `Mostrando ${offset + 1} - ${offset + data.docs.length} de ${totalResults} resultados encontrados`;
+                            
+                            // Mostrar y actualizar la paginación si hay más de una página
+                            if (totalPages > 1) {
+                                updatePagination();
+                                paginationContainer.style.display = 'block';
+                                pageInfo.textContent = `Página ${currentPage} de ${totalPages}`;
+                            } else {
+                                paginationContainer.style.display = 'none';
+                            }
                         } else {
                             // Mostrar mensaje si no hay resultados
                             emptyState.style.display = 'block';
@@ -691,6 +794,7 @@ body {
                                 <p>No hemos encontrado libros que coincidan con "${query}". Intenta con otra búsqueda.</p>
                             `;
                             resultsHeader.style.display = 'none';
+                            paginationContainer.style.display = 'none';
                         }
                     })
                     .catch(error => {
@@ -699,166 +803,279 @@ body {
                         errorMessage.style.display = 'block';
                         errorMessage.querySelector('#errorText').textContent = 'Ha ocurrido un error al buscar. Por favor, intenta de nuevo.';
                         emptyState.style.display = 'block';
+                        paginationContainer.style.display = 'none';
                     });
             }
             
-            // Función para mostrar los libros en la interfaz
-            // Funciones para manejar los favoritos
-function checkFavoriteStatus() {
-    if (!document.body.dataset.userLoggedIn) return;
-    
-    const bookButtons = document.querySelectorAll('.btn-favorite');
-    if (bookButtons.length === 0) return;
-    
-    // Obtener los IDs de libros para verificar
-    const bookIds = Array.from(bookButtons).map(btn => btn.dataset.bookId);
-    
-    // Verificar estado de favoritos para cada libro
-    bookIds.forEach(bookId => {
-        fetch(`/api/favoritos/es-favorito/${bookId}`)
-            .then(response => {
-                if (!response.ok) throw new Error('Error al verificar favorito');
-                return response.json();
-            })
-            .then(data => {
-                const btn = document.querySelector(`.btn-favorite[data-book-id="${bookId}"]`);
-                if (data.esFavorito) {
-                    btn.classList.add('active');
-                    btn.innerHTML = '<i class="fas fa-heart"></i>';
-                } else {
-                    btn.classList.remove('active');
-                    btn.innerHTML = '<i class="far fa-heart"></i>';
+            // Función para actualizar la paginación
+            function updatePagination() {
+                pagination.innerHTML = '';
+                
+                // Botón Anterior
+                const prevButton = document.createElement('li');
+                prevButton.className = `page-item ${currentPage === 1 ? 'disabled' : ''}`;
+                prevButton.innerHTML = `
+                    <a class="page-link" href="#" aria-label="Anterior">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                `;
+                if (currentPage > 1) {
+                    prevButton.addEventListener('click', () => {
+                        currentPage--;
+                        searchBooks(lastSearchQuery, currentPage);
+                        scrollToTop();
+                    });
                 }
-            })
-            .catch(error => console.error('Error:', error));
-    });
-}
-
-function toggleFavorite(event) {
-    if (!document.body.dataset.userLoggedIn) {
-        // Si no está logueado, redirigir a login
-        window.location.href = '/login';
-        return;
-    }
-    
-    const btn = event.currentTarget;
-    const bookId = btn.dataset.bookId;
-    const title = btn.dataset.title;
-    const author = btn.dataset.author;
-    const imageUrl = btn.dataset.image;
-    
-    // Obtener el token CSRF
-    const token = document.querySelector('meta[name="_csrf"]').getAttribute('content');
-    const header = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
-    
-    if (btn.classList.contains('active')) {
-        // Eliminar de favoritos
-        fetch(`/api/favoritos/${bookId}`, {
-            method: 'DELETE',
-            headers: {
-                [header]: token
+                pagination.appendChild(prevButton);
+                
+                // Calcular qué números de página mostrar
+                let startPage = Math.max(1, currentPage - 2);
+                let endPage = Math.min(totalPages, startPage + 4);
+                
+                // Ajustar si estamos cerca del final
+                if (endPage - startPage < 4) {
+                    startPage = Math.max(1, endPage - 4);
+                }
+                
+                // Primer número siempre visible
+                if (startPage > 1) {
+                    const firstPageBtn = document.createElement('li');
+                    firstPageBtn.className = 'page-item';
+                    firstPageBtn.innerHTML = '<a class="page-link" href="#">1</a>';
+                    firstPageBtn.addEventListener('click', () => {
+                        currentPage = 1;
+                        searchBooks(lastSearchQuery, currentPage);
+                        scrollToTop();
+                    });
+                    pagination.appendChild(firstPageBtn);
+                    
+                    // Añadir elipsis si hay un salto
+                    if (startPage > 2) {
+                        const ellipsis = document.createElement('li');
+                        ellipsis.className = 'page-item disabled';
+                        ellipsis.innerHTML = '<a class="page-link" href="#">...</a>';
+                        pagination.appendChild(ellipsis);
+                    }
+                }
+                
+                // Números de página
+                for (let i = startPage; i <= endPage; i++) {
+                    const pageBtn = document.createElement('li');
+                    pageBtn.className = `page-item ${i === currentPage ? 'active' : ''}`;
+                    pageBtn.innerHTML = `<a class="page-link" href="#">${i}</a>`;
+                    
+                    if (i !== currentPage) {
+                        pageBtn.addEventListener('click', () => {
+                            currentPage = i;
+                            searchBooks(lastSearchQuery, currentPage);
+                            scrollToTop();
+                        });
+                    }
+                    
+                    pagination.appendChild(pageBtn);
+                }
+                
+                // Último número siempre visible si hay un salto
+                if (endPage < totalPages) {
+                    // Añadir elipsis si hay un salto
+                    if (endPage < totalPages - 1) {
+                        const ellipsis = document.createElement('li');
+                        ellipsis.className = 'page-item disabled';
+                        ellipsis.innerHTML = '<a class="page-link" href="#">...</a>';
+                        pagination.appendChild(ellipsis);
+                    }
+                    
+                    const lastPageBtn = document.createElement('li');
+                    lastPageBtn.className = 'page-item';
+                    lastPageBtn.innerHTML = `<a class="page-link" href="#">${totalPages}</a>`;
+                    lastPageBtn.addEventListener('click', () => {
+                        currentPage = totalPages;
+                        searchBooks(lastSearchQuery, currentPage);
+                        scrollToTop();
+                    });
+                    pagination.appendChild(lastPageBtn);
+                }
+                
+                // Botón Siguiente
+                const nextButton = document.createElement('li');
+                nextButton.className = `page-item ${currentPage === totalPages ? 'disabled' : ''}`;
+                nextButton.innerHTML = `
+                    <a class="page-link" href="#" aria-label="Siguiente">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                `;
+                if (currentPage < totalPages) {
+                    nextButton.addEventListener('click', () => {
+                        currentPage++;
+                        searchBooks(lastSearchQuery, currentPage);
+                        scrollToTop();
+                    });
+                }
+                pagination.appendChild(nextButton);
             }
-        })
-        .then(response => {
-            if (!response.ok) throw new Error('Error al eliminar favorito');
-            return response.json();
-        })
-        .then(data => {
-            if (data.success) {
-                btn.classList.remove('active');
-                btn.innerHTML = '<i class="far fa-heart"></i>';
+            
+            // Función para desplazarse hacia arriba suavemente cuando se cambia de página
+            function scrollToTop() {
+                window.scrollTo({
+                    top: document.querySelector('.results-section').offsetTop - 100,
+                    behavior: 'smooth'
+                });
             }
-        })
-        .catch(error => console.error('Error:', error));
-    } else {
-        // Agregar a favoritos
-        fetch('/api/favoritos', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                [header]: token
-            },
-            body: JSON.stringify({
-                libroId: bookId,
-                titulo: title,
-                autor: author,
-                imagenUrl: imageUrl
-            })
-        })
-        .then(response => {
-            if (!response.ok) throw new Error('Error al agregar favorito');
-            return response.json();
-        })
-        .then(data => {
-            if (data.success) {
-                btn.classList.add('active');
-                btn.innerHTML = '<i class="fas fa-heart"></i>';
+            
+            // Función para mostrar los libros en la interfaz
+            function displayBooks(books) {
+                bookResults.innerHTML = '';
+                
+                books.forEach(book => {
+                    // Preparar datos del libro
+                    const title = book.title || 'Título desconocido';
+                    let authors = 'Autor desconocido';
+                    if (book.author_name && book.author_name.length > 0) {
+                        authors = book.author_name.join(', ');
+                    }
+                    
+                    // Año de publicación (si está disponible)
+                    const year = book.first_publish_year ? `(${book.first_publish_year})` : '';
+                    
+                    // Portada del libro
+                    let coverUrl = '/api/placeholder/400/250';
+                    if (book.cover_i) {
+                        coverUrl = `https://covers.openlibrary.org/b/id/${book.cover_i}-M.jpg`;
+                    }
+                    
+                    // ID del libro (key sin el prefijo)
+                    const bookId = book.key ? book.key.replace('/works/', '') : '';
+                    
+                    // Crear tarjeta de libro
+                    const bookCard = document.createElement('div');
+                    bookCard.className = 'col-md-4 col-sm-6 mb-4';
+                    bookCard.innerHTML = `
+                        <div class="book-card">
+                            <div class="book-img-container">
+                                <img src="${coverUrl}" alt="Portada de ${title}" onerror="this.src='/api/placeholder/400/250'">
+                                ${book.first_publish_year && book.first_publish_year <= 1950 ? '<span class="book-badge">CLÁSICO</span>' : ''}
+                            </div>
+                            <div class="book-info">
+                                <h3 class="book-title">${title} <small>${year}</small></h3>
+                                <p class="book-author"><i class="fas fa-pen-fancy me-2"></i>${authors}</p>
+                                <p class="book-description">${book.language ? 'Idioma: ' + book.language.join(', ') : ''}</p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <a href="https://openlibrary.org${book.key}" target="_blank" class="btn view-btn"><i class="fas fa-eye me-2"></i>Ver detalles</a>
+                                    <button class="btn-favorite" data-book-id="${bookId}" data-title="${title}" data-author="${authors}" data-image="${coverUrl}">
+                                        <i class="far fa-heart"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    
+                    bookResults.appendChild(bookCard);
+                });
+                
+                // Después de agregar todos los libros, verificamos cuáles son favoritos
+                checkFavoriteStatus();
+                
+                // Agregar evento a los botones de favorito
+                document.querySelectorAll('.btn-favorite').forEach(btn => {
+                    btn.addEventListener('click', toggleFavorite);
+                });
             }
-        })
-        .catch(error => console.error('Error:', error));
-    }
-}
-            // Modificación en la función displayBooks
-function displayBooks(books) {
-    bookResults.innerHTML = '';
+            
+            // Funciones para manejar los favoritos
+            function checkFavoriteStatus() {
+                if (!document.body.dataset.userLoggedIn) return;
+                
+                const bookButtons = document.querySelectorAll('.btn-favorite');
+                if (bookButtons.length === 0) return;
+                
+                // Obtener los IDs de libros para verificar
+                const bookIds = Array.from(bookButtons).map(btn => btn.dataset.bookId);
+                
+                // Verificar estado de favoritos para cada libro
+                bookIds.forEach(bookId => {
+                    fetch(`/api/favoritos/es-favorito/${bookId}`)
+                        .then(response => {
+                            if (!response.ok) throw new Error('Error al verificar favorito');
+                            return response.json();
+                        })
+                        .then(data => {
+                            const btn = document.querySelector(`.btn-favorite[data-book-id="${bookId}"]`);
+                            if (data.esFavorito) {
+                                btn.classList.add('active');
+                                btn.innerHTML = '<i class="fas fa-heart"></i>';
+                            } else {
+                                btn.classList.remove('active');
+                                btn.innerHTML = '<i class="far fa-heart"></i>';
+                            }
+                        })
+                        .catch(error => console.error('Error:', error));
+                });
+            }
     
-    books.forEach(book => {
-        // Preparar datos del libro
-        const title = book.title || 'Título desconocido';
-        let authors = 'Autor desconocido';
-        if (book.author_name && book.author_name.length > 0) {
-            authors = book.author_name.join(', ');
-        }
-        
-        // Año de publicación (si está disponible)
-        const year = book.first_publish_year ? `(${book.first_publish_year})` : '';
-        
-        // Portada del libro
-        let coverUrl = '/api/placeholder/400/250';
-        if (book.cover_i) {
-            coverUrl = `https://covers.openlibrary.org/b/id/${book.cover_i}-M.jpg`;
-        }
-        
-        // ID del libro (key sin el prefijo)
-        const bookId = book.key ? book.key.replace('/works/', '') : '';
-        
-        // Crear tarjeta de libro
-        const bookCard = document.createElement('div');
-        bookCard.className = 'col-md-4 col-sm-6 mb-4';
-        bookCard.innerHTML = `
-            <div class="book-card">
-                <div class="book-img-container">
-                    <img src="${coverUrl}" alt="Portada de ${title}" onerror="this.src='/api/placeholder/400/250'">
-                    ${book.first_publish_year && book.first_publish_year <= 1950 ? '<span class="book-badge">CLÁSICO</span>' : ''}
-                </div>
-                <div class="book-info">
-                    <h3 class="book-title">${title} <small>${year}</small></h3>
-                    <p class="book-author"><i class="fas fa-pen-fancy me-2"></i>${authors}</p>
-                    <p class="book-description">${book.language ? 'Idioma: ' + book.language.join(', ') : ''}</p>
-                    <div class="d-flex justify-content-between align-items-center">
-                        <a href="https://openlibrary.org${book.key}" target="_blank" class="btn view-btn"><i class="fas fa-eye me-2"></i>Ver detalles</a>
-                        <button class="btn-favorite" data-book-id="${bookId}" data-title="${title}" data-author="${authors}" data-image="${coverUrl}">
-                            <i class="far fa-heart"></i>
-                        </button>
-                    </div>
-                </div>
-            </div>
-        `;
-        
-        bookResults.appendChild(bookCard);
-
-        // Añadir después del script existente
-
-    });
-    
-    // Después de agregar todos los libros, verificamos cuáles son favoritos
-    checkFavoriteStatus();
-    
-    // Agregar evento a los botones de favorito
-    document.querySelectorAll('.btn-favorite').forEach(btn => {
-        btn.addEventListener('click', toggleFavorite);
-    });
-}
+            function toggleFavorite(event) {
+                if (!document.body.dataset.userLoggedIn) {
+                    // Si no está logueado, redirigir a login
+                    window.location.href = '/login';
+                    return;
+                }
+                
+                const btn = event.currentTarget;
+                const bookId = btn.dataset.bookId;
+                const title = btn.dataset.title;
+                const author = btn.dataset.author;
+                const imageUrl = btn.dataset.image;
+                
+                // Obtener el token CSRF
+                const token = document.querySelector('meta[name="_csrf"]').getAttribute('content');
+                const header = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
+                
+                if (btn.classList.contains('active')) {
+                    // Eliminar de favoritos
+                    fetch(`/api/favoritos/${bookId}`, {
+                        method: 'DELETE',
+                        headers: {
+                            [header]: token
+                        }
+                    })
+                    .then(response => {
+                        if (!response.ok) throw new Error('Error al eliminar favorito');
+                        return response.json();
+                    })
+                    .then(data => {
+                        if (data.success) {
+                            btn.classList.remove('active');
+                            btn.innerHTML = '<i class="far fa-heart"></i>';
+                        }
+                    })
+                    .catch(error => console.error('Error:', error));
+                } else {
+                    // Agregar a favoritos
+                    fetch('/api/favoritos', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            [header]: token
+                        },
+                        body: JSON.stringify({
+                            libroId: bookId,
+                            titulo: title,
+                            autor: author,
+                            imagenUrl: imageUrl
+                        })
+                    })
+                    .then(response => {
+                        if (!response.ok) throw new Error('Error al agregar favorito');
+                        return response.json();
+                    })
+                    .then(data => {
+                        if (data.success) {
+                            btn.classList.add('active');
+                            btn.innerHTML = '<i class="fas fa-heart"></i>';
+                        }
+                    })
+                    .catch(error => console.error('Error:', error));
+                }
+            }
         });
     </script>
     <!-- Script de tema -->
