@@ -114,10 +114,19 @@ src/
 
 
 ## Capturas de pantalla del sistema
-![image](https://github.com/user-attachments/assets/2f38cf5e-df30-44ce-83e3-fd2b9d71a696)
 
-![image](https://github.com/user-attachments/assets/ad227537-7b09-409c-be21-4aac196d10fc)
+![image](https://github.com/user-attachments/assets/e34ed17f-4402-40b1-96cd-46e02b3511eb)
 
-![image](https://github.com/user-attachments/assets/2f423c48-bd6f-4c8d-bc81-cd957653e025)
+![image](https://github.com/user-attachments/assets/98cf01d3-c853-4e35-8dd1-053e92c3ef3d)
 
+![image](https://github.com/user-attachments/assets/edbdff1a-5e18-45d5-a69b-4c6674e59151)
 
+![image](https://github.com/user-attachments/assets/77f8f100-b0af-4057-a14f-5d6d34a26d6b)
+
+![image](https://github.com/user-attachments/assets/082113fc-e048-4693-ad56-7af061fe2009)
+
+![image](https://github.com/user-attachments/assets/53fdfae4-77bc-44bf-ac59-1d8db129a84a)
+
+![image](https://github.com/user-attachments/assets/48e56e79-334d-4dae-9377-483bbb8c5f8e)
+
+![image](https://github.com/user-attachments/assets/15a89215-d0e3-491b-9875-287bfd3201fa)
