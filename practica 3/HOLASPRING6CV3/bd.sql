@@ -40,6 +40,20 @@ CREATE TABLE libros_favoritos (
 
 -- Insertar roles en la tabla roles
 INSERT INTO roles (nombre) VALUES ('ROLE_ADMIN'), ('ROLE_USER');
+-- Eliminar el usuario admin si ya existe (para evitar duplicados)
+DELETE FROM usuario_roles WHERE usuario_id IN (SELECT id FROM usuarios WHERE email = 'admin@admin.com');
+DELETE FROM usuarios WHERE email = 'admin@admin.com';
+
+-- Insertar un usuario administrador
+INSERT INTO usuarios (nombre, email, password)
+VALUES ('admin', 'admin@admin.com', '$2a$10$GJGcvTc.AMpmdUvt/dpW5OdvefqBgeOi1jKWuDuWxbiUMym1Alc06');
+-- La contraseña es 'admin' encriptada con BCrypt
+
+-- Obtener el ID del usuario recién creado
+SET @admin_id = LAST_INSERT_ID();
+
+-- Asignar el rol ADMIN al usuario (asumiendo que ROLE_ADMIN tiene ID=1)
+INSERT INTO usuario_roles (usuario_id, rol_id) VALUES (@admin_id, 1);
 -- Eliminar el usuario 'admin' si ya existe
 DROP USER IF EXISTS 'admin'@'localhost';
 FLUSH PRIVILEGES;
