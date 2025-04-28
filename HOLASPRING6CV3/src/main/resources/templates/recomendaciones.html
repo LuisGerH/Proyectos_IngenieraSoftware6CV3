@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recomendaciones - LibroSearch</title>
+    <!-- Tema CSS -->
+    <link href="/css/themes.css" rel="stylesheet">
+    <!-- CSRF Token para solicitudes fetch -->
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+    <!-- CDN de Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- CDN de Font Awesome para íconos -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <style>
+        .book-description {
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+    margin-bottom: 15px;
+    max-height: 80px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+}
+
+        /* Variables para temas */
+        :root {
+            /* Variables para tema claro (default) */
+            --primary: #2c3e50;
+            --secondary: #3498db;
+            --accent: #e74c3c;
+            --light: #ecf0f1;
+            --dark: #2c3e50;
+            --background: #f8f9fa;
+            --card-background: #fff;
+            --text-color: #333;
+            --text-secondary: #666;
+        }
+
+        /* Variables para tema oscuro */
+        body.theme-dark {
+            --primary: #2c3e50;
+            --secondary: #3498db;
+            --accent: #e74c3c;
+            --light: #1a1a1a;
+            --dark: #ecf0f1;
+            --background: #121212;
+            --card-background: #1e1e1e;
+            --text-color: #e0e0e0;
+            --text-secondary: #aaa;
+        }
+
+        /* Estilos generales */
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--background);
+            color: var(--text-color);
+        }
+
+        /* Header y Navbar */
+        .navbar {
+            background-color: var(--primary);
+            padding: 15px 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .navbar-brand {
+            font-family: 'Playfair Display', serif;
+            font-weight: 700;
+            font-size: 1.8rem;
+            color: #fff;
+        }
+        
+        .nav-link {
+            color: rgba(255,255,255,0.85) !important;
+            font-weight: 500;
+            margin: 0 10px;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-link:hover {
+            color: #fff !important;
+            transform: translateY(-2px);
+        }
+        
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, #9b59b6, #1abc9c);
+            padding: 60px 0;
+            color: #fff;
+            border-radius: 0 0 30% 30% / 30px;
+            margin-bottom: 50px;
+        }
+        
+        .hero h1 {
+            font-family: 'Playfair Display', serif;
+            font-weight: 700;
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+        }
+        
+        .hero p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Recomendaciones Section */
+        .recommendations-section {
+            padding: 20px 0 80px;
+        }
+        
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            margin-bottom: 30px;
+            position: relative;
+            display: inline-block;
+        }
+        
+        .section-title::after {
+            content: '';
+            position: absolute;
+            width: 60%;
+            height: 3px;
+            bottom: -10px;
+            left: 0;
+            background: var(--accent);
+        }
+        
+        .book-card {
+            background: var(--card-background);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+            margin-bottom: 30px;
+            border: none;
+            height: 100%;
+        }
+        
+        .book-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+        }
+        
+        .book-img-container {
+            position: relative;
+            overflow: hidden;
+            height: 250px;
+            background: #f0f0f0;
+        }
+        
+        .book-img-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: all 0.5s ease;
+        }
+        
+        .book-card:hover .book-img-container img {
+            transform: scale(1.1);
+        }
+        
+        .book-info {
+            padding: 20px;
+        }
+        
+        .book-title {
+            font-weight: 600;
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+            color: var(--text-color);
+        }
+        
+        .book-author {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+        }
+
+        .btn-favorite {
+            color: var(--accent);
+            background: none;
+            border: 1px solid var(--accent);
+            border-radius: 30px;
+            padding: 8px 20px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-favorite:hover {
+            background: var(--accent);
+            color: #fff;
+            transform: translateY(-2px);
+        }
+        
+        .btn-favorite.active {
+            background: var(--accent);
+            color: #fff;
+        }
+        
+        .view-btn {
+            background: var(--secondary);
+            color: #fff;
+            border-radius: 30px;
+            padding: 8px 20px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            border: none;
+            text-decoration: none;
+        }
+        
+        .view-btn:hover {
+            background: #2980b9;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(41, 128, 185, 0.3);
+            color: #fff;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            background: var(--card-background);
+            border-radius: 15px;
+            margin: 20px 0;
+        }
+        
+        .empty-state i {
+            font-size: 4rem;
+            color: #ccc;
+            margin-bottom: 20px;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--primary);
+            color: #fff;
+            padding: 40px 0 20px;
+        }
+        
+        .footer-title {
+            font-family: 'Playfair Display', serif;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+        
+        .footer-links {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .footer-links li {
+            margin-bottom: 10px;
+        }
+        
+        .footer-links a {
+            color: rgba(255,255,255,0.8);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        
+        .footer-links a:hover {
+            color: #fff;
+            padding-left: 5px;
+        }
+        
+        .social-icons a {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 50%;
+            line-height: 40px;
+            text-align: center;
+            color: #fff;
+            margin-right: 10px;
+            transition: all 0.3s ease;
+        }
+        
+        .social-icons a:hover {
+            background: var(--secondary);
+            transform: translateY(-3px);
+        }
+        
+        .copyright {
+            border-top: 1px solid rgba(255,255,255,0.1);
+            padding-top: 20px;
+            margin-top: 30px;
+            font-size: 0.9rem;
+            color: rgba(255,255,255,0.6);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero {
+                padding: 40px 0;
+                border-radius: 0 0 15% 15% / 20px;
+            }
+            
+            .hero h1 {
+                font-size: 2rem;
+            }
+            
+            .book-actions {
+                flex-direction: column;
+            }
+            
+            .book-actions button, .book-actions a {
+                margin-bottom: 10px;
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body th:class="'theme-' + (${#authentication != null} ? ${#authentication.principal.theme} : 'system')">
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="/home">LibroSearch</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <!-- Selector de tema -->
+                    <li class="nav-item">
+                        <div class="theme-selector">
+                            <div class="theme-options">
+                                <div class="theme-option" data-theme="light" title="Tema claro">
+                                    <i class="fas fa-sun"></i>
+                                </div>
+                                <div class="theme-option" data-theme="dark" title="Tema oscuro">
+                                    <i class="fas fa-moon"></i>
+                                </div>
+                                <div class="theme-option" data-theme="system" title="Tema del sistema">
+                                    <i class="fas fa-desktop"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/home"><i class="fas fa-search me-1"></i> Buscar Libros</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/user/mis-favoritos"><i class="fas fa-heart me-1"></i> Mis Favoritos</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/perfil"><i class="fas fa-user me-1"></i> Perfil</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/user/recomendaciones" ><i class="fas fa-book-reader me-1"></i> Recomendaciones</a>
+                    </li>
+                    <li class="nav-item" th:if="${isAdmin}">
+                        <a class="nav-link" href="/admin/gestion-usuarios"><i class="fas fa-cogs me-1"></i> Gestión</a>
+                    </li>
+                    <li class="nav-item">
+                        <form th:action="@{/logout}" method="post" style="display:inline;">
+                            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                            <button type="submit" class="nav-link" style="background:none;border:none;cursor:pointer;">
+                                <i class="fas fa-sign-out-alt me-1"></i> Cerrar Sesión
+                            </button>
+                        </form>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container text-center">
+            <h1>Recomendaciones personalizadas</h1>
+            <p>Descubre nuevos títulos basados en tus libros favoritos y preferencias de lectura</p>
+        </div>
+    </section>
+
+    <!-- Recommendations Section -->
+    <section class="recommendations-section">
+        <div class="container">
+            <div id="recommendationsHeader">
+                <h2 class="section-title">Libros recomendados para ti</h2>
+                <p id="recommendationsCount" class="mb-4" th:text="${cantidadRecomendaciones} + ' libros sugeridos según tus gustos'">0 libros sugeridos según tus gustos</p>
+            </div>
+            
+            <!-- Empty State - Si no hay recomendaciones -->
+            <div class="empty-state" th:if="${cantidadRecomendaciones == 0}">
+                <i class="fas fa-book-reader"></i>
+                <h3>Aún no tenemos recomendaciones para ti</h3>
+                <p>Agrega algunos libros a tus favoritos para que podamos sugerirte títulos similares</p>
+                <a href="/home" class="btn view-btn mt-3"><i class="fas fa-search me-2"></i>Buscar Libros</a>
+            </div>
+            
+            <!-- Book Cards Container -->
+            <div class="row" id="recommendedBooks" th:if="${cantidadRecomendaciones > 0}">
+                <!-- Tarjeta para cada libro recomendado -->
+                <div class="col-md-4 col-sm-6 mb-4" th:each="libro : ${recomendaciones}">
+                    <div class="book-card">
+                        <div class="book-img-container">
+                            <img th:src="${libro.imagenUrl != null ? libro.imagenUrl : '/api/placeholder/400/250'}" 
+                                 th:alt="'Portada de ' + ${libro.titulo}" 
+                                 onerror="this.src='/api/placeholder/400/250'">
+                        </div>
+                        <div class="book-info">
+                            <h3 class="book-title" th:text="${libro.titulo}">Título del libro</h3>
+    <p class="book-author"><i class="fas fa-pen-fancy me-2"></i><span th:text="${libro.autor != null ? libro.autor : 'Autor desconocido'}">Autor del libro</span></p>
+    <div class="d-flex justify-content-between align-items-center book-actions">
+                                <a th:href="'https://openlibrary.org/works/' + ${libro.id}" target="_blank" class="btn view-btn">
+                                    <i class="fas fa-eye me-2"></i>Ver detalles
+                                </a>
+                                <button class="btn btn-favorite" 
+                                        th:data-libro-id="${libro.id}" 
+                                        th:data-titulo="${libro.titulo}" 
+                                        th:data-autor="${libro.autor}" 
+                                        th:data-imagen-url="${libro.imagenUrl}">
+                                    <i class="far fa-heart me-2"></i>Guardar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <h4 class="footer-title">LibroSearch</h4>
+                    <p>Tu portal de búsqueda literaria donde podrás encontrar los mejores títulos de todos los géneros literarios para enriquecer tu biblioteca personal.</p>
+                    <div class="social-icons mt-3">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+                
+                <div class="col-lg-2 col-md-6 mb-4">
+                    <h5 class="footer-title">Enlaces</h5>
+                    <ul class="footer-links">
+                        <li><a href="/home">Inicio</a></li>
+                        <li><a href="/user/mis-favoritos">Mis Favoritos</a></li>
+                        <li><a href="#">Novedades</a></li>
+                        <li><a href="#">Géneros</a></li>
+                        <li><a href="#">Autores</a></li>
+                    </ul>
+                </div>
+                
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <h5 class="footer-title">Géneros populares</h5>
+                    <ul class="footer-links">
+                        <li><a href="#">Ficción</a></li>
+                        <li><a href="#">No ficción</a></li>
+                        <li><a href="#">Fantasía</a></li>
+                        <li><a href="#">Ciencia Ficción</a></li>
+                        <li><a href="#">Misterio</a></li>
+                    </ul>
+                </div>
+                
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <h5 class="footer-title">Contacto</h5>
+                    <ul class="footer-links">
+                        <li><i class="fas fa-map-marker-alt me-2"></i> Calle Librería 123, Madrid</li>
+                        <li><i class="fas fa-phone me-2"></i> +34 912 345 678</li>
+                        <li><i class="fas fa-envelope me-2"></i> info@librosearch.com</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-12">
+                    <div class="text-center copyright">
+                        <p>© 2025 LibroSearch. Todos los derechos reservados.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Script para manejo de recomendaciones -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // CSRF token para peticiones AJAX
+            const token = document.querySelector('meta[name="_csrf"]').getAttribute('content');
+            const header = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
+            
+            // Agregar event listeners a todos los botones de favoritos
+            document.querySelectorAll('.btn-favorite').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const libroId = this.getAttribute('data-libro-id');
+                    const titulo = this.getAttribute('data-titulo');
+                    const autor = this.getAttribute('data-autor');
+                    const imagenUrl = this.getAttribute('data-imagen-url');
+                    
+                    agregarAFavoritos(libroId, titulo, autor, imagenUrl, this);
+                });
+            });
+            
+            // Función para agregar a favoritos
+            function agregarAFavoritos(libroId, titulo, autor, imagenUrl, btnElement) {
+                fetch('/api/favoritos', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        [header]: token
+                    },
+                    body: JSON.stringify({
+                        libroId: libroId,
+                        titulo: titulo,
+                        autor: autor,
+                        imagenUrl: imagenUrl
+                    })
+                })
+                .then(response => {
+                    if (!response.ok) throw new Error('Error al agregar favorito');
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.success) {
+                        btnElement.classList.add('active');
+                        btnElement.innerHTML = '<i class="fas fa-heart me-2"></i>Guardado';
+                        
+                        Swal.fire({
+                            title: '¡Agregado!',
+                            text: 'El libro se ha añadido a tus favoritos',
+                            icon: 'success',
+                            timer: 1500,
+                            showConfirmButton: false
+                        });
+                    } else {
+                        Swal.fire({
+                            title: 'Aviso',
+                            text: 'Este libro ya está en tus favoritos',
+                            icon: 'info'
+                        });
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    Swal.fire({
+                        title: 'Error',
+                        text: 'Ha ocurrido un error al agregar el libro a favoritos',
+                        icon: 'error'
+                    });
+                });
+            }
+        });
+    </script>
+    
+    <!-- Script de tema -->
+    <script src="/js/theme.js"></script>
+</body>
+</html>

@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perfil</title>
+    <!-- Tema CSS -->
+    <link href="/css/themes.css" rel="stylesheet">
+    <!-- CSRF Token para solicitudes fetch -->
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        :root {
+            /* Variables para tema claro (default) */
+            --primary: #2c3e50;
+            --secondary: #3498db;
+            --accent: #e74c3c;
+            --light: #ecf0f1;
+            --dark: #2c3e50;
+            --background: #f8f9fa;
+            --card-background: #fff;
+            --text-color: #333;
+            --text-secondary: #666;
+        }
+
+        /* Variables para tema oscuro */
+        body.theme-dark {
+            --primary: #2c3e50;
+            --secondary: #3498db;
+            --accent: #e74c3c;
+            --light: #1a1a1a;
+            --dark: #ecf0f1;
+            --background: #121212;
+            --card-background: #1e1e1e;
+            --text-color: #e0e0e0;
+            --text-secondary: #aaa;
+        }
+    </style>
+</head>
+<body th:class="'theme-' + (${#authentication != null} ? ${#authentication.principal.theme} : 'system')"
+      th:data-user-logged-in="${#authentication != null}">
+
+    <div class="container mt-5">
+        <h2 class="text-center">Mi Perfil</h2>
+
+        <!-- Mensajes de éxito/error para actualización de datos -->
+        <div th:if="${param.success}" class="alert alert-success mt-3">
+            Datos actualizados correctamente.
+        </div>
+        <div th:if="${param.error}" class="alert alert-danger mt-3">
+            Error al actualizar los datos.
+        </div>
+
+        <!-- Mensajes de éxito/error para actualización de datos -->
+        <div th:if="${param.success}" class="alert alert-success mt-3">
+            Datos actualizados correctamente.
+        </div>
+        <div th:if="${param.error}" class="alert alert-danger mt-3">
+            Error al actualizar los datos.
+        </div>
+        <div th:if="${param.emailError}" class="alert alert-danger mt-3">
+            El correo electrónico ya está siendo utilizado por otro usuario.
+        </div>
+
+        <div th:if="${param.usernameError}" class="alert alert-danger mt-3">
+            El nombre de usuario ya está siendo utilizado por otro usuario.
+        </div>
+
+        <!-- Formulario de actualización de datos -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h4>Datos personales</h4>
+            </div>
+            <div class="card-body">
+                <form th:action="@{/perfil/actualizar}" method="post">
+                    <div class="mb-3">
+                        <label class="form-label">Nombre</label>
+                        <input type="text" class="form-control" name="nombre" th:value="${usuario.username}" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Correo Electrónico</label>
+                        <input type="email" class="form-control" name="email" th:value="${usuario.email}" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Rol</label>
+                        <ul>
+                            <li th:each="rol : ${usuario.roles}" th:text="${rol.name}"></li>
+                        </ul>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Mensajes de éxito/error para cambio de contraseña -->
+        <div th:if="${param.passwordSuccess}" class="alert alert-success mt-3">
+            Contraseña actualizada correctamente.
+        </div>
+        <div th:if="${param.passwordError != null && param.passwordError[0] == 'current'}" class="alert alert-danger mt-3">
+            La contraseña actual es incorrecta.
+        </div>
+        <div th:if="${param.passwordError != null && param.passwordError[0] == 'match'}" class="alert alert-danger mt-3">
+            Las nuevas contraseñas no coinciden.
+        </div>
+        <div th:if="${param.passwordError != null && param.passwordError[0] == 'unknown'}" class="alert alert-danger mt-3">
+            Ha ocurrido un error al cambiar la contraseña.
+        </div>
+
+        <div class="card mb-4">
+            <div class="card-header">
+                <h4>Cambiar contraseña</h4>
+            </div>
+            <div class="card-body">
+                <form th:action="@{/perfil/cambiar-password}" method="post">
+                    <!-- El token CSRF se incluye automáticamente con Thymeleaf -->
+                    <div class="mb-3">
+                        <label class="form-label">Contraseña actual</label>
+                        <input type="password" class="form-control" name="currentPassword" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Nueva contraseña</label>
+                        <input type="password" class="form-control" name="newPassword" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Confirmar nueva contraseña</label>
+                        <input type="password" class="form-control" name="confirmPassword" required>
+                    </div>
+                    <button type="submit" class="btn btn-warning">Cambiar contraseña</button>
+                </form>
+            </div>
+        </div>
+
+        <a href="/home" class="btn btn-secondary">Volver</a>
+    </div>
+
+    <!-- Logout form oculto y script -->
+    <form id="logoutForm" th:action="@{/logout}" method="post" style="display:none;">
+        <!-- CSRF token is automáticamente incluido por Thymeleaf -->
+    </form>
+
+    <script>
+        function submitLogoutForm() {
+            document.getElementById('logoutForm').submit();
+        }
+    </script>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/js/theme.js"></script>
+</body>
+</html>
