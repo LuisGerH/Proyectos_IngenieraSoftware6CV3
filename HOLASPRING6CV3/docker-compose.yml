@@ -1,23 +1,6 @@
 version: '3.8'
 
 services:
-  # Servicio de la aplicación Spring Boot
-  app:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    ports:
-      - "8080:8080"
-    depends_on:
-      - db
-    environment:
-      - SPRING_DATASOURCE_URL=${SPRING_DATASOURCE_URL:-jdbc:mysql://db:3306/tarea2?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true}
-      - SPRING_DATASOURCE_USERNAME=${SPRING_DATASOURCE_USERNAME:-admin}
-      - SPRING_DATASOURCE_PASSWORD=${SPRING_DATASOURCE_PASSWORD:-admin}
-    networks:
-      - app-network
-    restart: always
-
   # Servicio de la base de datos MySQL
   db:
     image: mysql:8.0
@@ -31,6 +14,29 @@ services:
     volumes:
       - mysql-data:/var/lib/mysql
       - ./bd.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - app-network
+    restart: always
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p$$MYSQL_ROOT_PASSWORD"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  # Servicio de la aplicación Spring Boot
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      - SPRING_DATASOURCE_URL=${SPRING_DATASOURCE_URL:-jdbc:mysql://db:3306/tarea2?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true}
+      - SPRING_DATASOURCE_USERNAME=${SPRING_DATASOURCE_USERNAME:-admin}
+      - SPRING_DATASOURCE_PASSWORD=${SPRING_DATASOURCE_PASSWORD:-admin}
     networks:
       - app-network
     restart: always

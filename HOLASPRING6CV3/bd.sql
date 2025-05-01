@@ -16,8 +16,7 @@ CREATE TABLE roles (
 id BIGINT PRIMARY KEY AUTO_INCREMENT,
 nombre VARCHAR(64) NOT NULL UNIQUE
 );
--- Crear la tabla intermedia para la relación muchos a muchos entre usuarios y
-
+-- Crear la tabla intermedia para la relación muchos a muchos entre usuarios y roles
 CREATE TABLE usuario_roles (
 usuario_id BIGINT,
 rol_id BIGINT,
@@ -54,12 +53,17 @@ SET @admin_id = LAST_INSERT_ID();
 
 -- Asignar el rol ADMIN al usuario (asumiendo que ROLE_ADMIN tiene ID=1)
 INSERT INTO usuario_roles (usuario_id, rol_id) VALUES (@admin_id, 1);
--- Eliminar el usuario 'admin' si ya existe
+
+-- Eliminar el usuario 'admin' si ya existe (para cualquier host)
+DROP USER IF EXISTS 'admin'@'%';
 DROP USER IF EXISTS 'admin'@'localhost';
 FLUSH PRIVILEGES;
--- Crear el usuario 'admin' con la contraseña 'admin'
-CREATE USER 'admin'@'localhost' IDENTIFIED BY 'admin';
+
+-- Crear el usuario 'admin' que puede acceder desde cualquier host
+CREATE USER 'admin'@'%' IDENTIFIED BY 'admin';
+
 -- Otorgar todos los permisos sobre la base de datos "tarea2" al usuario 'admin'
-GRANT ALL PRIVILEGES ON tarea2.* TO 'admin'@'localhost';
+GRANT ALL PRIVILEGES ON tarea2.* TO 'admin'@'%';
+
 -- Aplicar los cambios
 FLUSH PRIVILEGES;
