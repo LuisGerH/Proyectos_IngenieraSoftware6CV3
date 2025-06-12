@@ -131,7 +131,7 @@ src/
 
 ![image](https://github.com/user-attachments/assets/15a89215-d0e3-491b-9875-287bfd3201fa)
 
-##Implementación de de aplicación móvil con flutter
+## Implementación de de aplicación móvil con flutter
 
 ![Flutter login](https://github.com/user-attachments/assets/65ee2b45-0bf5-4d50-b601-7ca4977538e9)
 
