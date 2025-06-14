@@ -1,0 +1,141 @@
+{% extends 'base.html' %}
+
+{% block title %}Inicio - Mi Aplicación Django{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center text-center">
+    <div class="col-lg-8">
+        <div class="card">
+            <div class="card-body p-5">
+                <i class="fas fa-rocket fa-4x text-primary mb-4"></i>
+                <h1 class="display-4 fw-bold mb-3">¡Bienvenido a Mi Aplicación!</h1>
+                <p class="lead mb-4">
+                    Una aplicación Django moderna con sistema de autenticación completo, 
+                    diseñada con Bootstrap y dockerizada para facilitar el desarrollo.
+                </p>
+                
+                {% if user.is_authenticated %}
+                    <div class="alert alert-success">
+                        <i class="fas fa-check-circle me-2"></i>
+                        ¡Hola {{ user.first_name }}! Ya tienes una sesión activa.
+                    </div>
+                    <a href="{% url 'dashboard' %}" class="btn btn-primary btn-lg me-3">
+                        <i class="fas fa-tachometer-alt me-2"></i>Ir al Dashboard
+                    </a>
+                    <a href="{% url 'logout' %}" class="btn btn-outline-secondary btn-lg">
+                        <i class="fas fa-sign-out-alt me-2"></i>Cerrar Sesión
+                    </a>
+                {% else %}
+                    <div class="d-grid gap-2 d-md-block">
+                        <a href="{% url 'register' %}" class="btn btn-primary btn-lg me-3">
+                            <i class="fas fa-user-plus me-2"></i>Registrarse
+                        </a>
+                        <a href="{% url 'login' %}" class="btn btn-outline-primary btn-lg">
+                            <i class="fas fa-sign-in-alt me-2"></i>Iniciar Sesión
+                        </a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Características -->
+<div class="row mt-5">
+    <div class="col-md-4 mb-4">
+        <div class="card h-100 text-center">
+            <div class="card-body">
+                <i class="fas fa-users fa-3x text-primary mb-3"></i>
+                <h4>Sistema de Usuarios</h4>
+                <p class="text-muted">
+                    Registro completo con validaciones, autenticación segura y 
+                    gestión de perfiles personalizados.
+                </p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4 mb-4">
+        <div class="card h-100 text-center">
+            <div class="card-body">
+                <i class="fas fa-database fa-3x text-success mb-3"></i>
+                <h4>Base de Datos</h4>
+                <p class="text-muted">
+                    PostgreSQL dockerizado para un desarrollo fácil y 
+                    un rendimiento óptimo en producción.
+                </p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4 mb-4">
+        <div class="card h-100 text-center">
+            <div class="card-body">
+                <i class="fas fa-mobile-alt fa-3x text-info mb-3"></i>
+                <h4>Responsive Design</h4>
+                <p class="text-muted">
+                    Interfaz moderna construida con Bootstrap 5, 
+                    optimizada para todos los dispositivos.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Información del sistema -->
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header bg-transparent">
+                <h5 class="mb-0">
+                    <i class="fas fa-info-circle text-info me-2"></i>
+                    Estado del Sistema
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row text-center">
+                    <div class="col-md-3">
+                        <i class="fas fa-server text-success fa-2x mb-2"></i>
+                        <h6>Servidor</h6>
+                        <span class="badge bg-success">En línea</span>
+                    </div>
+                    <div class="col-md-3">
+                        <i class="fas fa-database text-primary fa-2x mb-2"></i>
+                        <h6>Base de Datos</h6>
+                        <span class="badge bg-primary">PostgreSQL</span>
+                    </div>
+                    <div class="col-md-3">
+                        <i class="fab fa-python text-warning fa-2x mb-2"></i>
+                        <h6>Framework</h6>
+                        <span class="badge bg-warning text-dark">Django</span>
+                    </div>
+                    <div class="col-md-3">
+                        <i class="fab fa-docker text-info fa-2x mb-2"></i>
+                        <h6>Contenedor</h6>
+                        <span class="badge bg-info">Docker</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Animación de entrada
+document.addEventListener('DOMContentLoaded', function() {
+    const cards = document.querySelectorAll('.card');
+    cards.forEach((card, index) => {
+        card.style.opacity = '0';
+        card.style.transform = 'translateY(20px)';
+        
+        setTimeout(() => {
+            card.style.transition = 'all 0.5s ease';
+            card.style.opacity = '1';
+            card.style.transform = 'translateY(0)';
+        }, index * 200);
+    });
+});
+</script>
+{% endblock %}

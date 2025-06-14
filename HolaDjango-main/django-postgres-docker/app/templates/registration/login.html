@@ -1,0 +1,101 @@
+{% extends 'base.html' %}
+
+{% block title %}Iniciar Sesión - Mi Aplicación{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-5 col-md-7">
+        <div class="card">
+            <div class="card-header bg-transparent text-center py-4">
+                <h2 class="mb-0">
+                    <i class="fas fa-sign-in-alt text-primary me-2"></i>
+                    Iniciar Sesión
+                </h2>
+                <p class="text-muted mt-2">Bienvenido de nuevo</p>
+            </div>
+            
+            <div class="card-body p-4">
+                <form method="post">
+                    {% csrf_token %}
+                    
+                    <!-- Email/Username -->
+                    <div class="mb-3">
+                        <label for="{{ form.username.id_for_label }}" class="form-label">
+                            <i class="fas fa-user me-1"></i>Email o Usuario
+                        </label>
+                        <input type="text" 
+                               name="username" 
+                               class="form-control" 
+                               id="id_username"
+                               placeholder="tu@email.com o usuario"
+                               required>
+                        {% if form.username.errors %}
+                            <div class="text-danger small mt-1">
+                                {% for error in form.username.errors %}
+                                    <div>{{ error }}</div>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <!-- Password -->
+                    <div class="mb-3">
+                        <label for="{{ form.password.id_for_label }}" class="form-label">
+                            <i class="fas fa-lock me-1"></i>Contraseña
+                        </label>
+                        <input type="password" 
+                               name="password" 
+                               class="form-control" 
+                               id="id_password"
+                               placeholder="Tu contraseña"
+                               required>
+                        {% if form.password.errors %}
+                            <div class="text-danger small mt-1">
+                                {% for error in form.password.errors %}
+                                    <div>{{ error }}</div>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <!-- Errores generales del formulario -->
+                    {% if form.non_field_errors %}
+                        <div class="alert alert-danger">
+                            {% for error in form.non_field_errors %}
+                                <div>{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+
+                    <!-- Remember me -->
+                    <div class="mb-3 form-check">
+                        <input type="checkbox" class="form-check-input" id="rememberMe">
+                        <label class="form-check-label" for="rememberMe">
+                            Recordarme
+                        </label>
+                    </div>
+
+                    <!-- Botón de submit -->
+                    <div class="d-grid mb-3">
+                        <button type="submit" class="btn btn-primary btn-lg">
+                            <i class="fas fa-sign-in-alt me-2"></i>Iniciar Sesión
+                        </button>
+                    </div>
+
+                    <!-- Links adicionales -->
+                    <div class="text-center">
+                        <p class="mb-2">
+                            <a href="{% url 'password_reset' %}" class="text-decoration-none small">
+                                ¿Olvidaste tu contraseña?
+                            </a>
+                        </p>
+                        <p class="mb-0">¿No tienes cuenta? 
+                            <a href="{% url 'register' %}" class="text-decoration-none">Regístrate</a>
+                        </p>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
