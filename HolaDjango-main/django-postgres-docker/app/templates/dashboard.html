@@ -1,87 +1,89 @@
 {% extends 'base.html' %}
 
-{% block title %}Dashboard - Mi Aplicación{% endblock %}
+{% block title %}Dashboard - {{ user.first_name }}{% endblock %}
 
 {% block content %}
-<div class="row">
+<div class="row mb-4">
     <div class="col-12">
-        <div class="card mb-4">
-            <div class="card-header bg-transparent">
-                <h3 class="mb-0">
-                    <i class="fas fa-tachometer-alt text-primary me-2"></i>
-                    ¡Bienvenido, {{ user.first_name }}!
-                </h3>
-            </div>
+        <div class="card bg-primary text-white">
             <div class="card-body">
-                <p class="lead">Has iniciado sesión exitosamente en tu dashboard personal.</p>
+                <div class="row align-items-center">
+                    <div class="col-md-8">
+                        <h1 class="h2 mb-2">
+                            <i class="fas fa-tachometer-alt me-2"></i>
+                            ¡Bienvenido, {{ user.first_name }}!
+                        </h1>
+                        <p class="lead mb-0">
+                            Tu panel de control personal. Desde aquí puedes acceder a todas las funcionalidades de la aplicación.
+                        </p>
+                    </div>
+                    <div class="col-md-4 text-center">
+                        <i class="fas fa-user-circle fa-5x opacity-75"></i>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </div>
 
-<div class="row">
-    <!-- Información del Usuario -->
-    <div class="col-lg-6 mb-4">
-        <div class="card h-100">
-            <div class="card-header bg-transparent">
+<!-- Información del usuario -->
+<div class="row mb-4">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
                 <h5 class="mb-0">
-                    <i class="fas fa-user-circle text-info me-2"></i>
-                    Tu Información
+                    <i class="fas fa-user me-2"></i>
+                    Información de la Cuenta
                 </h5>
             </div>
             <div class="card-body">
-                <dl class="row">
-                    <dt class="col-sm-4">Nombre:</dt>
-                    <dd class="col-sm-8">{{ user.first_name }} {{ user.last_name }}</dd>
-                    
-                    <dt class="col-sm-4">Email:</dt>
-                    <dd class="col-sm-8">{{ user.email }}</dd>
-                    
-                    <dt class="col-sm-4">Usuario:</dt>
-                    <dd class="col-sm-8">{{ user.username }}</dd>
-                    
-                    {% if user.phone %}
-                    <dt class="col-sm-4">Teléfono:</dt>
-                    <dd class="col-sm-8">{{ user.phone }}</dd>
-                    {% endif %}
-                    
-                    {% if user.date_of_birth %}
-                    <dt class="col-sm-4">Fecha de Nacimiento:</dt>
-                    <dd class="col-sm-8">{{ user.date_of_birth|date:"d/m/Y" }}</dd>
-                    {% endif %}
-                    
-                    <dt class="col-sm-4">Miembro desde:</dt>
-                    <dd class="col-sm-8">{{ user.date_joined|date:"d/m/Y" }}</dd>
-                </dl>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <strong>Nombre de usuario:</strong><br>
+                        <span class="text-muted">{{ user.username }}</span>
+                        
+                        <strong class="d-block mt-3">Nombre completo:</strong><br>
+                        <span class="text-muted">{{ user.first_name }} {{ user.last_name }}</span>
+                        
+                        <strong class="d-block mt-3">Email:</strong><br>
+                        <span class="text-muted">{{ user.email }}</span>
+                    </div>
+                    <div class="col-sm-6">
+                        {% if user.phone %}
+                        <strong>Teléfono:</strong><br>
+                        <span class="text-muted">{{ user.phone }}</span>
+                        {% endif %}
+                        
+                        {% if user.date_of_birth %}
+                        <strong class="d-block mt-3">Fecha de nacimiento:</strong><br>
+                        <span class="text-muted">{{ user.date_of_birth|date:"d/m/Y" }}</span>
+                        {% endif %}
+                        
+                        <strong class="d-block mt-3">Miembro desde:</strong><br>
+                        <span class="text-muted">{{ user.date_joined|date:"d/m/Y" }}</span>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
     
-    <!-- Acciones Rápidas -->
-    <div class="col-lg-6 mb-4">
-        <div class="card h-100">
-            <div class="card-header bg-transparent">
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
                 <h5 class="mb-0">
-                    <i class="fas fa-bolt text-warning me-2"></i>
+                    <i class="fas fa-cog me-2"></i>
                     Acciones Rápidas
                 </h5>
             </div>
             <div class="card-body">
                 <div class="d-grid gap-2">
                     <a href="{% url 'password_change' %}" class="btn btn-outline-primary">
-                        <i class="fas fa-key me-2"></i>Cambiar Contraseña
+                        <i class="fas fa-key me-1"></i>
+                        Cambiar Contraseña
                     </a>
-                    
-                    <button class="btn btn-outline-info" onclick="showProfile()">
-                        <i class="fas fa-edit me-2"></i>Editar Perfil
-                    </button>
-                    
-                    <button class="btn btn-outline-success" onclick="showStats()">
-                        <i class="fas fa-chart-bar me-2"></i>Ver Estadísticas
-                    </button>
-                    
-                    <a href="{% url 'logout' %}" class="btn btn-outline-danger">
-                        <i class="fas fa-sign-out-alt me-2"></i>Cerrar Sesión
+                    <a href="{% url 'anime_search' %}" class="btn btn-success">
+                        <i class="fas fa-search me-1"></i>
+                        Buscar Anime
                     </a>
                 </div>
             </div>
@@ -89,52 +91,155 @@
     </div>
 </div>
 
-<!-- Estadísticas de Usuario -->
+<!-- Funcionalidades principales -->
+<div class="row mb-4">
+    <div class="col-12">
+        <h3 class="mb-3">
+            <i class="fas fa-star me-2 text-warning"></i>
+            Funcionalidades Principales
+        </h3>
+    </div>
+</div>
+
 <div class="row">
-    <div class="col-md-4 mb-3">
-        <div class="card text-center">
-            <div class="card-body">
-                <i class="fas fa-calendar-check fa-2x text-primary mb-2"></i>
-                <h4 class="card-title">{{ user.date_joined|timesince }}</h4>
-                <p class="card-text text-muted">Tiempo como miembro</p>
+    <!-- Card de búsqueda de anime -->
+    <div class="col-lg-6 mb-4">
+        <div class="card h-100 border-success">
+            <div class="card-body text-center">
+                <div class="mb-3">
+                    <i class="fas fa-search fa-3x text-success"></i>
+                </div>
+                <h4 class="card-title">Búsqueda de Anime</h4>
+                <p class="card-text text-muted">
+                    Explora miles de animes utilizando la API de MyAnimeList. 
+                    Encuentra información detallada, puntuaciones, sinopsis y más.
+                </p>
+                <div class="mb-3">
+                    <span class="badge bg-success me-1">Activo</span>
+                    <span class="badge bg-info">API Jikan</span>
+                </div>
+                <a href="{% url 'anime_search' %}" class="btn btn-success">
+                    <i class="fas fa-play me-1"></i>
+                    Comenzar Búsqueda
+                </a>
             </div>
         </div>
     </div>
-    
-    <div class="col-md-4 mb-3">
-        <div class="card text-center">
-            <div class="card-body">
-                <i class="fas fa-clock fa-2x text-success mb-2"></i>
-                <h4 class="card-title">{{ user.last_login|date:"H:i" }}</h4>
-                <p class="card-text text-muted">Último acceso</p>
-            </div>
-        </div>
-    </div>
-    
-    <div class="col-md-4 mb-3">
-        <div class="card text-center">
-            <div class="card-body">
-                <i class="fas fa-shield-alt fa-2x text-info mb-2"></i>
-                <h4 class="card-title">{% if user.is_staff %}Admin{% else %}Usuario{% endif %}</h4>
-                <p class="card-text text-muted">Tipo de cuenta</p>
+
+    <!-- Card de funcionalidad futura -->
+    <div class="col-lg-6 mb-4">
+        <div class="card h-100 border-warning">
+            <div class="card-body text-center">
+                <div class="mb-3">
+                    <i class="fas fa-bookmark fa-3x text-warning"></i>
+                </div>
+                <h4 class="card-title">Mi Lista de Anime</h4>
+                <p class="card-text text-muted">
+                    Guarda tus animes favoritos, marca los que has visto y 
+                    organiza tu lista personalizada.
+                </p>
+                <div class="mb-3">
+                    <span class="badge bg-warning text-dark">Próximamente</span>
+                    <span class="badge bg-secondary">En desarrollo</span>
+                </div>
+                <button class="btn btn-outline-warning" disabled>
+                    <i class="fas fa-clock me-1"></i>
+                    Muy Pronto
+                </button>
             </div>
         </div>
     </div>
 </div>
 
-<!-- Modal para futuras funcionalidades -->
-<div class="modal fade" id="profileModal" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Editar Perfil</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+<!-- Estadísticas del sistema -->
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header bg-transparent">
+                <h5 class="mb-0">
+                    <i class="fas fa-chart-bar me-2 text-info"></i>
+                    Estadísticas del Sistema
+                </h5>
             </div>
-            <div class="modal-body">
-                <p>Esta funcionalidad estará disponible próximamente.</p>
+            <div class="card-body">
+                <div class="row text-center">
+                    <div class="col-md-3 col-6 mb-3">
+                        <div class="border-end">
+                            <i class="fas fa-user-check text-success fa-2x mb-2"></i>
+                            <h4 class="text-success">Activo</h4>
+                            <small class="text-muted">Tu Estado</small>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-6 mb-3">
+                        <div class="border-end">
+                            <i class="fas fa-database text-primary fa-2x mb-2"></i>
+                            <h4 class="text-primary">PostgreSQL</h4>
+                            <small class="text-muted">Base de Datos</small>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-6 mb-3">
+                        <div class="border-end">
+                            <i class="fab fa-python text-warning fa-2x mb-2"></i>
+                            <h4 class="text-warning">Django</h4>
+                            <small class="text-muted">Framework</small>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-6 mb-3">
+                        <i class="fas fa-shield-alt text-info fa-2x mb-2"></i>
+                        <h4 class="text-info">Seguro</h4>
+                        <small class="text-muted">Autenticación</small>
+                    </div>
+                </div>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+        </div>
+    </div>
+</div>
+
+<!-- Consejos útiles -->
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card border-info">
+            <div class="card-header bg-info text-white">
+                <h5 class="mb-0">
+                    <i class="fas fa-lightbulb me-2"></i>
+                    Consejos Útiles
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <ul class="list-unstyled">
+                            <li class="mb-2">
+                                <i class="fas fa-check text-success me-2"></i>
+                                Usa la <strong>búsqueda de anime</strong> para descubrir nuevos títulos
+                            </li>
+                            <li class="mb-2">
+                                <i class="fas fa-check text-success me-2"></i>
+                                Busca tanto en <strong>inglés como en japonés</strong>
+                            </li>
+                            <li class="mb-2">
+                                <i class="fas fa-check text-success me-2"></i>
+                                Revisa los <strong>detalles completos</strong> de cada anime
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="col-md-6">
+                        <ul class="list-unstyled">
+                            <li class="mb-2">
+                                <i class="fas fa-info text-info me-2"></i>
+                                La función de <strong>guardar anime</strong> estará disponible pronto
+                            </li>
+                            <li class="mb-2">
+                                <i class="fas fa-info text-info me-2"></i>
+                                Cambia tu contraseña regularmente por seguridad
+                            </li>
+                            <li class="mb-2">
+                                <i class="fas fa-info text-info me-2"></i>
+                                Los datos provienen de <strong>MyAnimeList</strong>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -143,33 +248,34 @@
 
 {% block extra_js %}
 <script>
-function showProfile() {
-    var profileModal = new bootstrap.Modal(document.getElementById('profileModal'));
-    profileModal.show();
-}
-
-function showStats() {
-    alert('Funcionalidad de estadísticas próximamente disponible!');
-}
-
-// Saludo personalizado basado en la hora
 document.addEventListener('DOMContentLoaded', function() {
-    const now = new Date();
-    const hour = now.getHours();
-    let greeting;
-    
-    if (hour < 12) {
-        greeting = 'Buenos días';
-    } else if (hour < 18) {
-        greeting = 'Buenas tardes';
-    } else {
-        greeting = 'Buenas noches';
-    }
-    
-    const welcomeText = document.querySelector('.card-header h3');
-    if (welcomeText) {
-        welcomeText.innerHTML = `<i class="fas fa-tachometer-alt text-primary me-2"></i>${greeting}, {{ user.first_name }}!`;
-    }
+    // Animación de entrada para las cards
+    const cards = document.querySelectorAll('.card');
+    cards.forEach((card, index) => {
+        card.style.opacity = '0';
+        card.style.transform = 'translateY(20px)';
+        
+        setTimeout(() => {
+            card.style.transition = 'all 0.5s ease';
+            card.style.opacity = '1';
+            card.style.transform = 'translateY(0)';
+        }, index * 150);
+    });
+
+    // Efecto hover mejorado para botones
+    const buttons = document.querySelectorAll('.btn');
+    buttons.forEach(button => {
+        button.addEventListener('mouseenter', function() {
+            if (!this.disabled) {
+                this.style.transform = 'translateY(-2px)';
+                this.style.transition = 'transform 0.2s ease';
+            }
+        });
+        
+        button.addEventListener('mouseleave', function() {
+            this.style.transform = 'translateY(0)';
+        });
+    });
 });
 </script>
 {% endblock %}

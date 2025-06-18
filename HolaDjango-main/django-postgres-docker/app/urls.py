@@ -14,6 +14,10 @@ urlpatterns = [
     path('dashboard/', views.dashboard_view, name='dashboard'),
     path('success/', views.success_view, name='success'),
     
+    # URLs de anime
+    path('anime/', views.anime_search_view, name='anime_search'),
+    path('anime/<int:anime_id>/', views.anime_detail_view, name='anime_detail'),
+    
     # URLs para cambio de contraseña
     path('password-change/', auth_views.PasswordChangeView.as_view(template_name='registration/password_change.html'), name='password_change'),
     path('password-change/done/', auth_views.PasswordChangeDoneView.as_view(template_name='registration/password_change_done.html'), name='password_change_done'),

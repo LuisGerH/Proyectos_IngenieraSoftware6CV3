@@ -34,10 +34,24 @@ class _LoginScreenState extends State<LoginScreen> {
   bool _isLoading = false;
   String _errorMessage = '';
 
-  // Cambia esta IP por la IP de tu máquina donde corre Spring Boot
-  // Para emulador Android: usa 10.0.2.2
-  // Para dispositivo físico: usa la IP de tu PC (ej: 192.168.1.100)
-  final String baseUrl = 'http://10.0.2.2:8080'; // Cambiar según tu caso
+  // IP actualizada según tu ipconfig
+  final String baseUrl = 'http://192.168.100.43:8080';
+
+  Future<void> _testConnection() async {
+    print('Probando conexión a: $baseUrl');
+    try {
+      final response = await http.get(
+        Uri.parse('$baseUrl/login'),
+        headers: {'Content-Type': 'application/json'},
+      ).timeout(Duration(seconds: 10));
+      
+      print('Respuesta del servidor: ${response.statusCode}');
+      print('Headers: ${response.headers}');
+      
+    } catch (e) {
+      print('Error de conexión: $e');
+    }
+  }
 
   Future<void> _login() async {
     if (!_formKey.currentState!.validate()) return;
@@ -48,27 +62,33 @@ class _LoginScreenState extends State<LoginScreen> {
     });
 
     try {
-      // Primero obtenemos el token CSRF
-      final csrfResponse = await http.get(
+      print('Intentando conectar a: $baseUrl/login');
+      
+      // Primero probamos si el servidor responde
+      final testResponse = await http.get(
         Uri.parse('$baseUrl/login'),
         headers: {'Content-Type': 'application/json'},
-      );
+      ).timeout(Duration(seconds: 15)); // Aumentamos timeout
+      
+      print('Servidor responde: ${testResponse.statusCode}');
 
       String? csrfToken;
       String? jsessionid;
 
-      // Extraer CSRF token de la respuesta HTML (método simple)
-      if (csrfResponse.body.contains('_csrf')) {
+      // Extraer CSRF token de la respuesta HTML
+      if (testResponse.body.contains('_csrf')) {
         final csrfMatch = RegExp(r'name="_csrf"[^>]*value="([^"]*)"')
-            .firstMatch(csrfResponse.body);
+            .firstMatch(testResponse.body);
         csrfToken = csrfMatch?.group(1);
+        print('CSRF Token encontrado: $csrfToken');
       }
 
       // Extraer JSESSIONID de las cookies
-      final cookies = csrfResponse.headers['set-cookie'];
+      final cookies = testResponse.headers['set-cookie'];
       if (cookies != null) {
         final sessionMatch = RegExp(r'JSESSIONID=([^;]+)').firstMatch(cookies);
         jsessionid = sessionMatch?.group(1);
+        print('JSESSIONID encontrado: $jsessionid');
       }
 
       // Realizar login
@@ -83,7 +103,9 @@ class _LoginScreenState extends State<LoginScreen> {
           'password': _passwordController.text,
           if (csrfToken != null) '_csrf': csrfToken,
         },
-      );
+      ).timeout(Duration(seconds: 15));
+
+      print('Login response: ${response.statusCode}');
 
       if (response.statusCode == 200 || response.statusCode == 302) {
         // Login exitoso
@@ -97,12 +119,17 @@ class _LoginScreenState extends State<LoginScreen> {
         );
       } else {
         setState(() {
-          _errorMessage = 'Usuario o contraseña incorrectos';
+          _errorMessage = 'Usuario o contraseña incorrectos (${response.statusCode})';
         });
       }
     } catch (e) {
+      print('Error completo: $e');
       setState(() {
-        _errorMessage = 'Error de conexión: ${e.toString()}';
+        if (e.toString().contains('TimeoutException') || e.toString().contains('Connection timed out')) {
+          _errorMessage = 'No se puede conectar al servidor. Verifica que Spring Boot esté ejecutándose en $baseUrl';
+        } else {
+          _errorMessage = 'Error de conexión: ${e.toString()}';
+        }
       });
     } finally {
       setState(() {
@@ -168,7 +195,18 @@ class _LoginScreenState extends State<LoginScreen> {
                             color: Colors.grey[700],
                           ),
                         ),
-                        SizedBox(height: 32),
+                        SizedBox(height: 16),
+                        
+                        // Botón de prueba de conexión
+                        TextButton.icon(
+                          onPressed: _testConnection,
+                          icon: Icon(Icons.wifi_tethering),
+                          label: Text('Probar conexión'),
+                          style: TextButton.styleFrom(
+                            foregroundColor: Color(0xFF6A11CB),
+                          ),
+                        ),
+                        SizedBox(height: 16),
                         
                         // Campo de usuario
                         TextFormField(
@@ -282,7 +320,6 @@ class _LoginScreenState extends State<LoginScreen> {
                         // Link de registro
                         TextButton(
                           onPressed: () {
-                            // Navegar a registro (implementar después si necesitas)
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(content: Text('Registro no implementado')),
                             );
@@ -290,6 +327,16 @@ class _LoginScreenState extends State<LoginScreen> {
                           child: Text(
                             '¿No tienes cuenta? Regístrate',
                             style: TextStyle(color: Color(0xFF6A11CB)),
+                          ),
+                        ),
+                        
+                        SizedBox(height: 8),
+                        // Información de debug
+                        Text(
+                          'Servidor: $baseUrl',
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: Colors.grey[600],
                           ),
                         ),
                       ],

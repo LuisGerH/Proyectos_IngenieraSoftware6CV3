@@ -1,0 +1,282 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ anime.title|default:"Anime" }} - Detalles{% endblock %}
+
+{% block content %}
+{% if error_message %}
+<div class="row">
+    <div class="col-12">
+        <div class="alert alert-danger">
+            <i class="fas fa-exclamation-triangle me-2"></i>
+            {{ error_message }}
+        </div>
+        <a href="{% url 'anime_search' %}" class="btn btn-primary">
+            <i class="fas fa-arrow-left me-1"></i>Volver a la búsqueda
+        </a>
+    </div>
+</div>
+{% elif anime %}
+<!-- Breadcrumb -->
+<nav aria-label="breadcrumb" class="mb-4">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'index' %}">Inicio</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'anime_search' %}">Búsqueda de Anime</a></li>
+        <li class="breadcrumb-item active">{{ anime.title }}</li>
+    </ol>
+</nav>
+
+<!-- Información principal del anime -->
+<div class="row mb-4">
+    <div class="col-lg-4 col-md-5 mb-4">
+        <!-- Imagen principal -->
+        <div class="card">
+            <img 
+                src="{{ anime.images.jpg.large_image_url|default:anime.images.jpg.image_url }}" 
+                class="card-img-top"
+                alt="{{ anime.title }}"
+                style="height: 500px; object-fit: cover;"
+            >
+            <div class="card-body">
+                <div class="d-grid gap-2">
+                    <button class="btn btn-success btn-save-anime" data-anime-id="{{ anime.mal_id }}">
+                        <i class="fas fa-bookmark me-1"></i>Guardar en Mi Lista
+                    </button>
+                    {% if anime.trailer.url %}
+                    <a href="{{ anime.trailer.url }}" target="_blank" class="btn btn-outline-danger">
+                        <i class="fab fa-youtube me-1"></i>Ver Trailer
+                    </a>
+                    {% endif %}
+                    {% if anime.url %}
+                    <a href="{{ anime.url }}" target="_blank" class="btn btn-outline-primary">
+                        <i class="fas fa-external-link-alt me-1"></i>Ver en MAL
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-8 col-md-7">
+        <!-- Información del anime -->
+        <div class="card h-100">
+            <div class="card-body">
+                <!-- Título y puntuación -->
+                <div class="d-flex justify-content-between align-items-start mb-3">
+                    <div>
+                        <h1 class="h2 mb-1">{{ anime.title }}</h1>
+                        {% if anime.title_english and anime.title_english != anime.title %}
+                        <h2 class="h5 text-muted mb-1">{{ anime.title_english }}</h2>
+                        {% endif %}
+                        {% if anime.title_japanese %}
+                        <h3 class="h6 text-muted">{{ anime.title_japanese }}</h3>
+                        {% endif %}
+                    </div>
+                    {% if anime.score %}
+                    <div class="text-center">
+                        <div class="display-6 fw-bold text-primary">{{ anime.score }}</div>
+                        <small class="text-muted">MAL Score</small>
+                        {% if anime.scored_by %}
+                        <div class="small text-muted">{{ anime.scored_by|floatformat:0 }} votos</div>
+                        {% endif %}
+                    </div>
+                    {% endif %}
+                </div>
+
+                <!-- Badges de información -->
+                <div class="mb-3">
+                    <span class="badge bg-primary me-1">{{ anime.type|default:"N/A" }}</span>
+                    <span class="badge 
+                        {% if anime.status == 'Currently Airing' %}bg-success
+                        {% elif anime.status == 'Finished Airing' %}bg-secondary
+                        {% else %}bg-info{% endif %} me-1">
+                        {{ anime.status }}
+                    </span>
+                    {% if anime.rating %}
+                    <span class="badge bg-warning text-dark me-1">{{ anime.rating }}</span>
+                    {% endif %}
+                    {% if anime.rank %}
+                    <span class="badge bg-dark">#{{ anime.rank }} Popular</span>
+                    {% endif %}
+                </div>
+
+                <!-- Información técnica -->
+                <div class="row mb-4">
+                    <div class="col-sm-6">
+                        <strong>Episodios:</strong> {{ anime.episodes|default:"N/A" }}<br>
+                        <strong>Duración:</strong> {{ anime.duration|default:"N/A" }}<br>
+                        <strong>Temporada:</strong> 
+                        {% if anime.season and anime.year %}
+                            {{ anime.season|title }} {{ anime.year }}
+                        {% elif anime.year %}
+                            {{ anime.year }}
+                        {% else %}
+                            N/A
+                        {% endif %}<br>
+                        <strong>Fuente:</strong> {{ anime.source|default:"N/A" }}
+                    </div>
+                    <div class="col-sm-6">
+                        {% if anime.aired.string %}
+                        <strong>Emisión:</strong> {{ anime.aired.string }}<br>
+                        {% endif %}
+                        {% if anime.members %}
+                        <strong>Miembros:</strong> {{ anime.members|floatformat:0 }}<br>
+                        {% endif %}
+                        {% if anime.favorites %}
+                        <strong>Favoritos:</strong> {{ anime.favorites|floatformat:0 }}<br>
+                        {% endif %}
+                        {% if anime.popularity %}
+                        <strong>Popularidad:</strong> #{{ anime.popularity }}
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- Géneros -->
+                {% if anime.genres %}
+                <div class="mb-4">
+                    <strong class="d-block mb-2">Géneros:</strong>
+                    {% for genre in anime.genres %}
+                        <span class="badge bg-light text-dark me-1 mb-1">{{ genre.name }}</span>
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+                <!-- Sinopsis -->
+                {% if anime.synopsis %}
+                <div class="mb-4">
+                    <strong class="d-block mb-2">Sinopsis:</strong>
+                    <p class="text-muted">{{ anime.synopsis|linebreaks }}</p>
+                </div>
+                {% endif %}
+
+                <!-- Información adicional -->
+                {% if anime.background %}
+                <div class="mb-4">
+                    <strong class="d-block mb-2">Información adicional:</strong>
+                    <p class="text-muted small">{{ anime.background|linebreaks }}</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Información de producción -->
+<div class="row">
+    {% if anime.studios %}
+    <div class="col-lg-4 mb-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-building me-2"></i>Estudios
+                </h5>
+            </div>
+            <div class="card-body">
+                {% for studio in anime.studios %}
+                <span class="badge bg-primary me-1 mb-1">{{ studio.name }}</span>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    {% if anime.producers %}
+    <div class="col-lg-4 mb-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-users me-2"></i>Productores
+                </h5>
+            </div>
+            <div class="card-body">
+                {% for producer in anime.producers %}
+                <span class="badge bg-info me-1 mb-1">{{ producer.name }}</span>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    {% if anime.licensors %}
+    <div class="col-lg-4 mb-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-certificate me-2"></i>Licenciadores
+                </h5>
+            </div>
+            <div class="card-body">
+                {% for licensor in anime.licensors %}
+                <span class="badge bg-success me-1 mb-1">{{ licensor.name }}</span>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+<!-- Información sobre funcionalidad futura -->
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="alert alert-info">
+            <i class="fas fa-info-circle me-2"></i>
+            <strong>Nota:</strong> La funcionalidad de "Guardar en Mi Lista" se implementará próximamente.
+        </div>
+    </div>
+</div>
+
+{% endif %}
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Manejo temporal del botón "Guardar Anime"
+    const saveButton = document.querySelector('.btn-save-anime');
+    if (saveButton) {
+        saveButton.addEventListener('click', function(e) {
+            e.preventDefault();
+            const animeId = this.getAttribute('data-anime-id');
+            
+            // Cambiar estado del botón temporalmente
+            const originalHTML = this.innerHTML;
+            this.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i>Guardando...';
+            this.disabled = true;
+            
+            // Simular guardado (remover cuando se implemente la funcionalidad real)
+            setTimeout(() => {
+                this.innerHTML = '<i class="fas fa-check me-1"></i>¡Guardado en Mi Lista!';
+                this.classList.remove('btn-success');
+                this.classList.add('btn-outline-success');
+                
+                setTimeout(() => {
+                    this.innerHTML = originalHTML;
+                    this.classList.remove('btn-outline-success');
+                    this.classList.add('btn-success');
+                    this.disabled = false;
+                }, 3000);
+            }, 1000);
+        });
+    }
+
+    // Mejorar carga de imagen
+    const animeImage = document.querySelector('.card-img-top');
+    if (animeImage) {
+        animeImage.addEventListener('error', function() {
+            this.src = 'https://via.placeholder.com/400x500/cccccc/666666?text=No+Image';
+        });
+    }
+
+    // Animación de entrada
+    const cards = document.querySelectorAll('.card');
+    cards.forEach((card, index) => {
+        card.style.opacity = '0';
+        card.style.transform = 'translateY(20px)';
+        
+        setTimeout(() => {
+            card.style.transition = 'all 0.5s ease';
+            card.style.opacity = '1';
+            card.style.transform = 'translateY(0)';
+        }, index * 200);
+    });
+});
+</script>
