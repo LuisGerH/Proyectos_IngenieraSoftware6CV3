@@ -179,29 +179,31 @@ Contraseña: admin123
 ## 📸 Capturas de Pantalla
 
 ### Pantalla de Inicio de Sesión
-*[Aquí va tu imagen de login]*
 
-![Pantalla de Login](ruta/a/tu/imagen_login.png)
+![Pantalla de Login](![image](https://github.com/user-attachments/assets/a63958da-e614-4e55-8641-958db60be11e)
+)
 
 ### Pantalla de Registro
-*[Aquí va tu imagen de registro]*
 
-![Pantalla de Registro](ruta/a/tu/imagen_registro.png)
+![Pantalla de Registro](![image](https://github.com/user-attachments/assets/9072278b-b72c-4cd1-9661-cc5543b7d3c8)
+)
 
 ### Pantalla de Búsqueda
-*[Aquí va tu imagen de búsqueda]*
 
-![Pantalla de Búsqueda](ruta/a/tu/imagen_busqueda.png)
+![Pantalla de Búsqueda](![image](https://github.com/user-attachments/assets/1cc3aa69-684f-4056-b865-b5cc203c25af)
+)
+![image](https://github.com/user-attachments/assets/c8471ce2-624e-4c6b-884a-3003616c6788)
+
 
 ### Terminal - Backend Ejecutándose
-*[Aquí va tu captura del docker-compose up]*
 
-![Backend Running](ruta/a/tu/imagen_backend_terminal.png)
+![Backend Running](![image](https://github.com/user-attachments/assets/d0873b62-ce65-4a74-bb2a-6d8c51f94eec)
+)
 
 ### Terminal - Flutter Ejecutándose
-*[Aquí va tu captura del flutter run]*
 
-![Flutter Running](ruta/a/tu/imagen_flutter_terminal.png)
+![Flutter Running](![image](https://github.com/user-attachments/assets/c4d0d421-f741-4ae6-a7b4-f441b3c3edeb)
+)
 
 ## 🐛 Solución de Problemas
 
@@ -253,13 +255,9 @@ LibroSearch/
     └── pubspec.yaml         # Dependencias Flutter
 ```
 
-## 🤝 Contribuir
+## 🤝 Video de la aplicación móvil
 
-1. Fork el proyecto
-2. Crea una rama para tu feature (`git checkout -b feature/AmazingFeature`)
-3. Commit tus cambios (`git commit -m 'Add some AmazingFeature'`)
-4. Push a la rama (`git push origin feature/AmazingFeature`)
-5. Abre un Pull Request
+- Drive: https://drive.google.com/drive/folders/1fA9tqzwu3qnHgKmel-enF06YqaEVdwkD?usp=drive_link
 
 ## 📄 Licencia
 
@@ -267,15 +265,9 @@ Este proyecto fue desarrollado con fines educativos para la materia de Ingenier�
 
 ## 👤 Autor
 
-**Luis Gerardo Hernández**
+**Luis Gerardo Herrera**
 - GitHub: [@LuisGerH](https://github.com/LuisGerH)
 
-## 🙏 Agradecimientos
-
-- Profesor y compañeros de Ingeniería de Software 6CV3
-- Documentación oficial de Flutter y Spring Boot
-- Comunidad de desarrolladores
 
 ---
 
-¿Tienes problemas ejecutando el proyecto? [Abre un issue](https://github.com/LuisGerH/Proyectos_IngenieraSoftware6CV3/issues) y te ayudaremos a resolverlo.
