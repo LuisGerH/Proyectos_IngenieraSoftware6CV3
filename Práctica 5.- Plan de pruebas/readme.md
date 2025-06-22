@@ -142,6 +142,28 @@ El sistema ha demostrado **excelente calidad** y **robustez** en todas las área
 
 ---
 
+## Evidencia del Proceso de QA
+
+### 📸 Captura 1: Protección de Rama
+![image](https://github.com/user-attachments/assets/a243c238-5933-4972-81d2-9834e94ec431)
+![image](https://github.com/user-attachments/assets/9b894462-e012-4168-9049-3e14f9c39ffd)
+
+
+### 📸 Captura 2: Pull Request Creado
+![image](https://github.com/user-attachments/assets/d52c9864-1651-49cc-a632-8f9d35da515d)
+![image](https://github.com/user-attachments/assets/5628c980-d919-4acb-b490-846c8dfb7d8a)
+![image](https://github.com/user-attachments/assets/73319b18-75e0-4ddf-9734-fbcc9f297222)
+
+
+### 📸 Captura 3: Revisión y Aprobación
+![image](https://github.com/user-attachments/assets/f7a8237a-3c63-453e-a607-15c0879a2a48)
+
+
+### 📸 Captura 4: Merge Exitoso
+![image](https://github.com/user-attachments/assets/26d6e9ff-ce26-4c2a-87cd-1e5d11ee16e5)
+
+
+
 **Fecha**: 22 de junio de 2025  
 **Estado**: ✅ **APROBADO PARA PRODUCCIÓN**  
 **Equipo**: QA Testing Team
