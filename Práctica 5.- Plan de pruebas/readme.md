@@ -38,6 +38,10 @@ Este proyecto implementa un sistema completo de pruebas para una aplicación web
   - ✅ Registro de nuevos usuarios
   - ✅ Búsqueda de libros con metadatos
 
+  ## 🤝 Video de la aplicación móvil
+
+- Drive: https://drive.google.com/drive/folders/1fA9tqzwu3qnHgKmel-enF06YqaEVdwkD?usp=drive_link
+
 **Resultados**: ✅ **Todas las funcionalidades cumplieron los requisitos**
 
 ### 4. **Pruebas de Rendimiento**
