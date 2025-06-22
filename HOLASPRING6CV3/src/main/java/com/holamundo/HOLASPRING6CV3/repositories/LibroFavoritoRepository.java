@@ -10,4 +10,5 @@ public interface LibroFavoritoRepository extends JpaRepository<LibroFavorito, Lo
     List<LibroFavorito> findByUsuario(UserModel usuario);
     Optional<LibroFavorito> findByUsuarioAndLibroId(UserModel usuario, String libroId);
     boolean existsByUsuarioAndLibroId(UserModel usuario, String libroId);
+    
 }

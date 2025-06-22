@@ -1,0 +1,6 @@
+com\holamundo\HOLASPRING6CV3\Holaspring6Cv3ApplicationTests.class
+com\holamundo\HOLASPRING6CV3\services\LibroFavoritoServiceTest.class
+com\holamundo\HOLASPRING6CV3\services\UsuarioServiceIntegrationTest.class
+com\holamundo\HOLASPRING6CV3\config\TestSecurityConfig.class
+com\holamundo\HOLASPRING6CV3\controllers\UserRestControllerIntegrationTest.class
+com\holamundo\HOLASPRING6CV3\repositories\UserRepositoryIntegrationTest.class
