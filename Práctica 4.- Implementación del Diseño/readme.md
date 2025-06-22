@@ -180,30 +180,30 @@ Contraseña: admin123
 
 ### Pantalla de Inicio de Sesión
 
-![Pantalla de Login](![image](https://github.com/user-attachments/assets/a63958da-e614-4e55-8641-958db60be11e)
-)
+![image](https://github.com/user-attachments/assets/a63958da-e614-4e55-8641-958db60be11e)
+
 
 ### Pantalla de Registro
 
-![Pantalla de Registro](![image](https://github.com/user-attachments/assets/9072278b-b72c-4cd1-9661-cc5543b7d3c8)
-)
+![image](https://github.com/user-attachments/assets/9072278b-b72c-4cd1-9661-cc5543b7d3c8)
+
 
 ### Pantalla de Búsqueda
 
-![Pantalla de Búsqueda](![image](https://github.com/user-attachments/assets/1cc3aa69-684f-4056-b865-b5cc203c25af)
-)
+![image](https://github.com/user-attachments/assets/1cc3aa69-684f-4056-b865-b5cc203c25af)
+
 ![image](https://github.com/user-attachments/assets/c8471ce2-624e-4c6b-884a-3003616c6788)
 
 
 ### Terminal - Backend Ejecutándose
 
-![Backend Running](![image](https://github.com/user-attachments/assets/d0873b62-ce65-4a74-bb2a-6d8c51f94eec)
-)
+![image](https://github.com/user-attachments/assets/d0873b62-ce65-4a74-bb2a-6d8c51f94eec)
+
 
 ### Terminal - Flutter Ejecutándose
 
-![Flutter Running](![image](https://github.com/user-attachments/assets/c4d0d421-f741-4ae6-a7b4-f441b3c3edeb)
-)
+![image](https://github.com/user-attachments/assets/c4d0d421-f741-4ae6-a7b4-f441b3c3edeb)
+
 
 ## 🐛 Solución de Problemas
 
