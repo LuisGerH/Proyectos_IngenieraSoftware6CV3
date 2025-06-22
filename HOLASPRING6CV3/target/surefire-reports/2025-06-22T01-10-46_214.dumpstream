@@ -1,0 +1,5 @@
+# Created at 2025-06-22T01:10:46.346
+Boot Manifest-JAR contains absolute paths in classpath 'E:\escom\Software\intentogit\Proyectos_IngenieraSoftware6CV3\HOLASPRING6CV3\target\test-classes'
+Hint: <argLine>-Djdk.net.URLClassPath.disableClassPathURLCheck=true</argLine>
+'other' has different root
+
