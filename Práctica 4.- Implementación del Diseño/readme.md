@@ -1,142 +1,281 @@
-# Sistema de Busqueda y Recomendación de libros
+# LibroSearch 📚
+### Aplicación Móvil de Búsqueda de Libros
 
-## Descripción General
-Este es un proyecto Spring Boot que implementa un sistema de  Busqueda y Recomendación de libros con gestión de usuarios y autenticación, roles y permisos, dockerizado para un despliegue sencillo.
+Una aplicación móvil desarrollada en Flutter que se conecta a un backend Spring Boot para gestionar autenticación de usuarios y búsqueda de libros.
 
-## Características Principales
-- Autenticación de usuarios
-- Sistema de roles (ADMIN y USER)
-- Gestión de perfiles de usuario
-- Registro de nuevos usuarios
-- Busqueda de libros
-- Tema a elegir
-- Dockerización completa
+## 🚀 Características
 
-## Requisitos Previos
-- Java 21
-- Maven
-- Docker (opcional, para despliegue)
+- ✅ Autenticación de usuarios segura
+- ✅ Interfaz moderna con gradientes
+- ✅ Búsqueda de libros en tiempo real
+- ✅ Gestión de sesiones persistente
+- ✅ Diseño responsive
+- ✅ Integración con backend Spring Boot + MySQL
 
-## Ejercicios Implementados
+## 🛠️ Tecnologías Utilizadas
 
-- **Página principal:** Al ingresar al portal, los usuarios pueden ver una sección de bienvenida con una breve descripción de la plataforma, junto con un campo de búsqueda para ingresar un título, autor o ISBN del libro que desean encontrar.
-  
-- **Resultados de búsqueda:** Después de ingresar una consulta, los resultados se mostrarán en una serie de tarjetas con imágenes de portada de los libros, el nombre del autor y el año de publicación. Los resultados también indican si un libro es un **CLÁSICO** basado en su fecha de publicación.
+### Backend
+- **Spring Boot** - Framework Java
+- **MySQL** - Base de datos
+- **Docker** - Containerización
+- **Spring Security** - Autenticación y autorización
 
-- **Estado vacío:** Si no se encuentran libros relacionados con la búsqueda, se muestra un mensaje amigable animando al usuario a realizar una nueva búsqueda.
+### Frontend Mobile
+- **Flutter** - Framework de desarrollo móvil
+- **Dart** - Lenguaje de programación
+- **HTTP** - Cliente para API REST
+- **SharedPreferences** - Almacenamiento local
 
-- **Pantalla de carga:** Durante la búsqueda, se muestra un spinner de carga para que el usuario sepa que la plataforma está procesando su consulta.
+## 📋 Prerrequisitos
 
-- **Error en la búsqueda:** Si ocurre un error durante la búsqueda (por ejemplo, problemas con la conexión a la API), se mostrará un mensaje de error indicando al usuario que intente de nuevo.
+Antes de ejecutar el proyecto, asegúrate de tener instalado:
 
-## Funcionalidades de Favoritos
- 
- - **Añadir a favorito desde la búsqueda de libros:** Los usuarios pueden guardar libros directamente desde los resultados de búsqueda con un solo clic en el ícono de corazón.
- 
- - **Ver todos los favoritos:** Sección dedicada donde los usuarios pueden visualizar todos los libros que han guardado como favoritos, organizados en tarjetas con imagen, título y autor.
- 
- - **Eliminar favoritos:** Los usuarios pueden eliminar libros de su colección de favoritos. Al hacerlo, se aplica una animación suave que reduce la tarjeta antes de eliminarla, mejorando la experiencia visual.
- 
- - **Enlaces a detalles:** Cada libro tiene un botón o enlace que lleva directamente a su página en Open Library, donde se puede consultar más información.
+- [Git](https://git-scm.com/)
+- [Docker](https://www.docker.com/) y Docker Compose
+- [Flutter SDK](https://flutter.dev/docs/get-started/install) (versión 3.0 o superior)
+- [Android Studio](https://developer.android.com/studio) o dispositivo Android físico
+- Un editor de código (VS Code, Android Studio, etc.)
 
-## Funcionalidad de Recomendaciones
-
-- **Recomendaciones personalizadas basadas en favoritos:** El sistema analiza los autores de los libros marcados como favoritos por el usuario y sugiere otros libros escritos por los mismos autores, ayudando a descubrir nuevas lecturas afines a sus intereses.
-
-- **Integración con Open Library:** Las recomendaciones se obtienen dinámicamente a través de la API de Open Library, asegurando una base de datos actualizada y variada.
-
-- **Filtrado inteligente:** Se evitan sugerencias duplicadas al excluir los libros que ya están en la lista de favoritos del usuario.
-
-- **Visual atractivo:** Las recomendaciones incluyen imagen de portada, título y autor. Si no se encuentra una imagen, se muestra una por defecto.
-
-- **Máximo de recomendaciones:** Para evitar saturación visual, se muestran hasta 10 recomendaciones por usuario, seleccionadas entre los autores más relevantes.
-
-## Instalación y Ejecución
-
-### Método 1: Ejecución Local
-1. Clonar el repositorio
+### Verificar instalación de Flutter
 ```bash
-git clone <https://github.com/LuisGerH/Proyectos_IngenieraSoftware6CV3/tree/main/Tarea3>
+flutter --version
+flutter doctor
+```
+
+## 🚀 Instalación y Configuración
+
+### Paso 1: Clonar el Repositorio
+```bash
+git clone https://github.com/LuisGerH/Proyectos_IngenieraSoftware6CV3.git
+cd Proyectos_IngenieraSoftware6CV3
+```
+
+### Paso 2: Ejecutar el Backend
+
+1. **Navegar a la carpeta del backend:**
+```bash
 cd HOLASPRING6CV3
 ```
 
-2. Correr docker
-- Asegurarse de tener MySQL instalado
-- Crear base de datos `tarea2`
-- Configurar credenciales en `application.properties`
-
-3. Compilar y ejecutar
+2. **Iniciar los servicios con Docker Compose:**
 ```bash
-mvn clean package
-https://github.com/LuisGerH/Proyectos_IngenieraSoftware6CV3/tree/main/Tarea3
+docker-compose up
 ```
 
-### Método 2: Despliegue con Docker
-1. Asegurarse de tener Docker y Docker Compose instalados
+3. **Verificar que el backend esté corriendo:**
+   - El servidor debería estar disponible en `http://localhost:8080`
+   - Verifica en la terminal que los contenedores se hayan iniciado correctamente
 
-2. Construir y levantar servicios
+### Paso 3: Configurar la Aplicación Flutter
+
+1. **Navegar a la carpeta de Flutter:**
 ```bash
-docker-compose up --build
+cd ../flut_librosearch
 ```
 
-## Credenciales por Defecto
-- Usuario Regular: 
-  - Crear mediante registro en la aplicación
-
-## Características Técnicas
-- Lenguaje: Java 21
-- Framework: Spring Boot 3.4.2
-- Base de Datos: MySQL 8.0
-- Seguridad: Spring Security
-- Frontend: Thymeleaf, Bootstrap 5
-
-## Estructura del Proyecto
-```
-src/
-├── main/
-│   ├── java/com/holamundo/HOLASPRING6CV3/
-│   │   ├── config/
-│   │   ├── controllers/
-│   │   ├── models/
-│   │   ├── repositories/
-│   │   └── services/
-│   └── resources/
-│       ├── static/
-│       └── templates/
-└── docker-compose.yml
+2. **Instalar las dependencias:**
+```bash
+flutter pub get
 ```
 
-## Consideraciones de Seguridad
-- Contraseñas encriptadas con BCrypt
-- CSRF deshabilitado (configuración para desarrollo)
-- Control de acceso por roles
-- Validación de datos de entrada
+3. **Configurar la dirección IP del backend:**
 
+   **⚠️ IMPORTANTE:** Debes configurar la IP correcta según tu setup:
 
-## Capturas de pantalla del sistema
+   - **Para emulador Android:** Usar `10.0.2.2:8080`
+   - **Para dispositivo físico:** Usar la IP de tu máquina local
 
-![image](https://github.com/user-attachments/assets/e34ed17f-4402-40b1-96cd-46e02b3511eb)
+   Edita el archivo `lib/core/constants/api_constants.dart`:
 
-![image](https://github.com/user-attachments/assets/98cf01d3-c853-4e35-8dd1-053e92c3ef3d)
+   ```dart
+   class ApiConstants {
+     // Para EMULADOR Android:
+     static const String baseUrl = 'http://10.0.2.2:8080';
+     
+     // Para DISPOSITIVO FÍSICO (cambia por tu IP local):
+     // static const String baseUrl = 'http://192.168.1.XXX:8080';
+     
+     // Para encontrar tu IP local:
+     // Windows: ipconfig
+     // macOS/Linux: ifconfig
+   }
+   ```
 
-![image](https://github.com/user-attachments/assets/edbdff1a-5e18-45d5-a69b-4c6674e59151)
+### Paso 4: Preparar el Dispositivo/Emulador
 
-![image](https://github.com/user-attachments/assets/77f8f100-b0af-4057-a14f-5d6d34a26d6b)
+#### Opción A: Usar Emulador Android
+1. Abrir Android Studio
+2. Ir a AVD Manager
+3. Crear y ejecutar un emulador Android
+4. Verificar con: `flutter devices`
 
-![image](https://github.com/user-attachments/assets/082113fc-e048-4693-ad56-7af061fe2009)
+#### Opción B: Usar Dispositivo Físico
+1. Habilitar "Opciones de desarrollador" en tu dispositivo Android
+2. Activar "Depuración USB"
+3. Conectar el dispositivo por USB
+4. Verificar con: `flutter devices`
 
-![image](https://github.com/user-attachments/assets/53fdfae4-77bc-44bf-ac59-1d8db129a84a)
+### Paso 5: Ejecutar la Aplicación Flutter
 
-![image](https://github.com/user-attachments/assets/48e56e79-334d-4dae-9377-483bbb8c5f8e)
+```bash
+flutter run
+```
 
-![image](https://github.com/user-attachments/assets/15a89215-d0e3-491b-9875-287bfd3201fa)
+O para modo debug con hot reload:
+```bash
+flutter run --debug
+```
 
-## Implementación de de aplicación móvil con flutter
+## 🔧 Configuración de Red
 
-![Flutter login](https://github.com/user-attachments/assets/65ee2b45-0bf5-4d50-b601-7ca4977538e9)
+### Encontrar tu IP Local
 
-![flutter auth](https://github.com/user-attachments/assets/aac7a180-7ec1-451a-935b-0a84d84c3227)
+**Windows:**
+```cmd
+ipconfig
+```
+Buscar la dirección IPv4 de tu adaptador de red principal.
 
+**macOS/Linux:**
+```bash
+ifconfig
+```
+O usando:
+```bash
+ip addr show
+```
 
+### Probar Conectividad
 
+Desde tu dispositivo móvil, abre un navegador y visita:
+```
+http://TU_IP_LOCAL:8080
+```
 
+Si ves la página de login de Spring Boot, la configuración es correcta.
+
+## 📱 Uso de la Aplicación
+
+### Credenciales de Prueba
+```
+Usuario: admin
+Contraseña: admin123
+```
+
+### Funcionalidades Disponibles
+
+1. **Inicio de Sesión**
+   - Ingresa tus credenciales
+   - Usa el botón "Probar conexión" para verificar conectividad
+   - La sesión se mantiene localmente
+
+2. **Registro de Usuario**
+   - Crea una nueva cuenta desde la pantalla de registro
+
+3. **Búsqueda de Libros**
+   - Busca libros por título, autor o tema
+   - Visualiza resultados con portadas e información detallada
+
+## 📸 Capturas de Pantalla
+
+### Pantalla de Inicio de Sesión
+*[Aquí va tu imagen de login]*
+
+![Pantalla de Login](ruta/a/tu/imagen_login.png)
+
+### Pantalla de Registro
+*[Aquí va tu imagen de registro]*
+
+![Pantalla de Registro](ruta/a/tu/imagen_registro.png)
+
+### Pantalla de Búsqueda
+*[Aquí va tu imagen de búsqueda]*
+
+![Pantalla de Búsqueda](ruta/a/tu/imagen_busqueda.png)
+
+### Terminal - Backend Ejecutándose
+*[Aquí va tu captura del docker-compose up]*
+
+![Backend Running](ruta/a/tu/imagen_backend_terminal.png)
+
+### Terminal - Flutter Ejecutándose
+*[Aquí va tu captura del flutter run]*
+
+![Flutter Running](ruta/a/tu/imagen_flutter_terminal.png)
+
+## 🐛 Solución de Problemas
+
+### Problema: No se puede conectar al backend
+
+**Síntomas:**
+- Error de conexión en la app móvil
+- Timeout en las peticiones HTTP
+
+**Soluciones:**
+1. Verificar que Docker esté ejecutándose: `docker ps`
+2. Confirmar que el backend esté en puerto 8080: `curl http://localhost:8080`
+3. Revisar la configuración de IP en `api_constants.dart`
+4. Asegurarse de que el dispositivo/emulador esté en la misma red
+
+### Problema: El emulador no se conecta
+
+**Solución:**
+- Usar la IP especial del emulador: `10.0.2.2:8080`
+- Verificar que el emulador tenga conexión a internet
+
+### Problema: Dispositivo físico no se conecta
+
+**Soluciones:**
+1. Verificar que estén en la misma red WiFi
+2. Usar la IP local correcta de la máquina host
+3. Desactivar temporalmente el firewall para pruebas
+
+### Problema: Errores de compilación Flutter
+
+**Soluciones:**
+1. Limpiar caché: `flutter clean`
+2. Reinstalar dependencias: `flutter pub get`
+3. Verificar versión de Flutter: `flutter doctor`
+
+## 📁 Estructura del Proyecto
+
+```
+LibroSearch/
+├── HOLASPRING6CV3/          # Backend Spring Boot
+│   ├── docker-compose.yml   # Configuración Docker
+│   └── src/                 # Código fuente backend
+└── flut_librosearch/        # Frontend Flutter
+    ├── lib/
+    │   ├── core/            # Configuraciones y tema
+    │   ├── data/            # Servicios y repositorios
+    │   ├── presentation/    # Pantallas y widgets
+    │   └── utils/           # Utilidades
+    └── pubspec.yaml         # Dependencias Flutter
+```
+
+## 🤝 Contribuir
+
+1. Fork el proyecto
+2. Crea una rama para tu feature (`git checkout -b feature/AmazingFeature`)
+3. Commit tus cambios (`git commit -m 'Add some AmazingFeature'`)
+4. Push a la rama (`git push origin feature/AmazingFeature`)
+5. Abre un Pull Request
+
+## 📄 Licencia
+
+Este proyecto fue desarrollado con fines educativos para la materia de Ingeniería de Software.
+
+## 👤 Autor
+
+**Luis Gerardo Hernández**
+- GitHub: [@LuisGerH](https://github.com/LuisGerH)
+
+## 🙏 Agradecimientos
+
+- Profesor y compañeros de Ingeniería de Software 6CV3
+- Documentación oficial de Flutter y Spring Boot
+- Comunidad de desarrolladores
+
+---
+
+¿Tienes problemas ejecutando el proyecto? [Abre un issue](https://github.com/LuisGerH/Proyectos_IngenieraSoftware6CV3/issues) y te ayudaremos a resolverlo.
